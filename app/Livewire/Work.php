@@ -94,9 +94,17 @@ class Work extends Component
         if( !empty($this->new_photo) ){
             $image = Image::where('id', $work->image->id)->first();
 
-            $image->update([
-                'url' => $this->new_photo->store('works_photos', 'public'),
-            ]);
+            if ($work->image) {
+                $image->update([
+                    'url' => $this->new_photo->store('works_photos', 'public'),
+                ]);
+            } else {
+                Image::create([
+                    'url' => $this->photo->store('works_photos', 'public'),
+                    'imageable_id' => $work->id,
+                    'imageable_type' =>  WorkModel::class
+                ]);
+            }
         }
 
         $this->reset();
