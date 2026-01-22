@@ -7,8 +7,8 @@ use Livewire\Attributes\Validate;
 use App\Models\Work as WorkModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use App\Models\Image;
 use Livewire\WithFileUploads;
+use App\Models\Image;
 
 class Work extends Component
 {
