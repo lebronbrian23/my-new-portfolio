@@ -15,7 +15,7 @@ Route::get('/', function () {
 
 Route::get('/skills', [Skill::class , 'render'])->name('skills');
 Route::get('/works', [Work::class, 'render'])->name('works');
-Route::get('/navigation-links', [NavigationLink::class, 'render'])->name('navigation-links');
+Route::view('/navigation-links', 'navigation-links')->name('navigation-links');
 Route::get('/content-block', [ContentBlock::class, 'render'])->name('content-blocks');
 Route::get('/contact', [Contact::class, 'render'])->name('contact');
 
@@ -26,8 +26,6 @@ Route::view('dashboard', 'dashboard')
 
 Route::middleware(['auth'])->group(function () {
 
-
-    Route::post('/add-skill', [Skill::class , 'add'])->name('add-skill');
 
 
     Route::redirect('settings', 'settings/profile');

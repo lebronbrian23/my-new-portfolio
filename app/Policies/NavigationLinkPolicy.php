@@ -21,7 +21,7 @@ class NavigationLinkPolicy
      */
     public function view(User $user, NavigationLink $navigationLink): bool
     {
-        return false;
+        return true;
     }
 
     /**

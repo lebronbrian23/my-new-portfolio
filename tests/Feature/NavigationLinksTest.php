@@ -24,9 +24,9 @@ class NavigationLinksTest extends TestCase
         $user = User::factory()->create();
 
         $link = NavigationLinkModel::create([
-            'link_name' => "Profile",
-            'link_route' => "/",
-            'link_icon' => "fa-profile",
+            'link_name' => "Skills",
+            'link_route' => "skills",
+            'link_icon' => "bolt",
             'link_position' => 4,
             'user_id' => $user->id
         ]);
@@ -44,8 +44,7 @@ class NavigationLinksTest extends TestCase
         $response = $this->get('navigation-links');
 
         $response->assertStatus(200)
-            ->assertViewIs('livewire.navigation-link')
-            ->assertViewHas(['title', 'links']);
+            ->assertViewIs('navigation-links');
 
     }
 
@@ -59,17 +58,17 @@ class NavigationLinksTest extends TestCase
         Livewire::actingAs($user)
             ->test(NavigationLink::class)
             ->set('link_name', 'Home')
-            ->set('link_route', '/')
-            ->set('link_icon', 'fa-home')
+            ->set('link_route', 'skills')
+            ->set('link_icon', 'bolt')
             ->set('link_position', 1)
-            ->call('add')
+            ->call('save')
             ->assertHasNoErrors();
 
         $this->assertDatabaseCount('navigation_links', 1);
 
         $this->assertDatabaseHas('navigation_links',[
             'link_name' => 'Home',
-            'link_route' => '/',
+            'link_route' => 'skills',
             'link_position' => 1
         ]);
 
@@ -82,10 +81,10 @@ class NavigationLinksTest extends TestCase
     {
         Livewire::test(NavigationLink::class)
             ->set('link_name', 'Home')
-            ->set('link_route', '/')
-            ->set('link_icon', 'fa-home')
+            ->set('link_route', 'skills')
+            ->set('link_icon', 'bolt')
             ->set('link_position', 1)
-            ->call('add')
+            ->call('save')
             ->assertForbidden();
     }
 
@@ -99,10 +98,10 @@ class NavigationLinksTest extends TestCase
         Livewire::actingAs($user)
             ->test(NavigationLink::class)
             ->set('link_name', '')
-            ->set('link_route', '/')
-            ->set('link_icon', 'fa-home')
+            ->set('link_route', 'skills')
+            ->set('link_icon', 'bolt')
             ->set('link_position', 1)
-            ->call('add')
+            ->call('save')
             ->assertHasErrors();
     }
 
@@ -118,8 +117,8 @@ class NavigationLinksTest extends TestCase
             ->set('link_name', 'Home')
             ->set('link_route', '')
             ->set('link_position', 1)
-            ->set('link_icon', 'fa-home')
-            ->call('add')
+            ->set('link_icon', 'bolt')
+            ->call('save')
             ->assertHasErrors();
     }
 
@@ -133,9 +132,9 @@ class NavigationLinksTest extends TestCase
         Livewire::actingAs($user)
             ->test(NavigationLink::class)
             ->set('link_name', 234322)
-            ->set('link_route', '/')
+            ->set('link_route', 'skills')
             ->set('link_position', 1)
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['link_name' => 'string']);
     }
 
@@ -151,7 +150,7 @@ class NavigationLinksTest extends TestCase
             ->set('link_name', 'Home')
             ->set('link_route', 234132)
             ->set('link_position', 1)
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['link_route' => 'string']);
     }
 
@@ -165,9 +164,9 @@ class NavigationLinksTest extends TestCase
         Livewire::actingAs($user)
             ->test(NavigationLink::class)
             ->set('link_name', 'Home')
-            ->set('link_route', '/')
+            ->set('link_route', 'skills')
             ->set('link_position', 'Home233')
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['link_position' => 'integer']);
     }
 
@@ -180,8 +179,8 @@ class NavigationLinksTest extends TestCase
 
         $link = NavigationLinkModel::create([
             'link_name' => "Home",
-            'link_route' => "/",
-            'link_icon' => "fa-home",
+            'link_route' => "skills",
+            'link_icon' => "bolt",
             'link_position' => 2,
             'user_id' => $user->id
         ]);
@@ -190,17 +189,17 @@ class NavigationLinksTest extends TestCase
 
         Livewire::actingAs($user)
             ->test(NavigationLink::class)
-            ->set('new_link_name', 'Home')
-            ->set('new_link_route', '/home')
-            ->set('new_link_position', 1)
-            ->set('new_link_icon', 'fa-dashboard')
-            ->call('update', $link->id)
+            ->set('link_name', 'Home')
+            ->set('link_route', 'skills')
+            ->set('link_position', 1)
+            ->set('link_icon', 'bolt')
+            ->call('save', $link->id)
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('navigation_links',[
             'link_name' => "Home",
-            'link_route' => "/home",
-            'link_icon' => "fa-dashboard",
+            'link_route' => "skills",
+            'link_icon' => "bolt",
             'link_position' => 1,
             'user_id' => $user->id
         ]);
@@ -216,7 +215,7 @@ class NavigationLinksTest extends TestCase
 
         $link = NavigationLinkModel::create([
             'link_name' => "Home",
-            'link_route' => "/",
+            'link_route' => "skills",
             'link_position' => 2,
             'user_id' => $user->id
         ]);
@@ -224,11 +223,11 @@ class NavigationLinksTest extends TestCase
         $this->assertDatabaseCount('navigation_links', 1);
 
         Livewire::test(NavigationLink::class)
-            ->set('new_link_name', 'Home')
-            ->set('new_link_route', '/home')
-            ->set('new_link_icon', 'fa-home')
-            ->set('new_link_position', 1)
-            ->call('update', $link->id)
+            ->set('link_name', 'Home')
+            ->set('link_route', 'skills')
+            ->set('link_icon', 'bolt')
+            ->set('link_position', 1)
+            ->call('save', $link->id)
             ->assertForbidden();
 
     }
@@ -242,8 +241,8 @@ class NavigationLinksTest extends TestCase
 
         $link = NavigationLinkModel::create([
             'link_name' => "Home",
-            'link_route' => "/",
-            'link_icon' => "fa-home",
+            'link_route' => "skills",
+            'link_icon' => "bolt",
             'link_position' => 2,
             'user_id' => $user->id
         ]);
@@ -268,8 +267,8 @@ class NavigationLinksTest extends TestCase
 
         $link = NavigationLinkModel::create([
             'link_name' => "Home",
-            'link_route' => "/",
-            'link_icon' => "fa-home",
+            'link_route' => "skills",
+            'link_icon' => "bolt",
             'link_position' => 2,
             'user_id' => $user->id
         ]);
