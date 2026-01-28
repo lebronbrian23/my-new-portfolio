@@ -21,7 +21,7 @@ class WorkPolicy
      */
     public function view(User $user, Work $work): bool
     {
-        return false;
+        return true;
     }
 
     /**

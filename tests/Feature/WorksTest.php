@@ -35,8 +35,7 @@ class WorksTest extends TestCase
         $response = $this->get('/works');
 
         $response->assertStatus(200)
-            ->assertViewIs('livewire.work')
-            ->assertViewHas(['title', 'works']);
+            ->assertViewIs('works');
 
     }
 
@@ -72,7 +71,7 @@ class WorksTest extends TestCase
             ->set('description', 'Financial Application for SMEs')
             ->set('skills', [$php->id, $js->id])
             ->set('photo', $photo)
-            ->call('add')
+            ->call('save')
             ->assertHasNoErrors();
 
         $work = WorkModel::first();
@@ -115,7 +114,7 @@ class WorksTest extends TestCase
 
         Storage::fake('works_photos');
 
-        $photo = UploadedFile::fake()->image('photo.pdf');
+        $photo = UploadedFile::fake()->create('photo.pdf','100', 'application/pdf');
 
         Livewire::actingAs($user)
             ->test(Work::class)
@@ -123,10 +122,8 @@ class WorksTest extends TestCase
             ->set('description', 'Financial Application for SMEs')
             ->set('skills', [$php->id, $js->id])
             ->set('photo', $photo)
-            ->call('add')
-            ->assertHasErrors();
-
-        $this->assertDatabaseCount('works', 0);
+            ->call('save')
+            ->assertHasErrors(['photo']);
 
     }
 
@@ -157,7 +154,7 @@ class WorksTest extends TestCase
             ->set('title', 'Patasente')
             ->set('description', 'Financial Application for SMEs')
             ->set('skills', [$php->id, $js->id])
-            ->call('add')
+            ->call('save')
             ->assertForbidden();
 
     }
@@ -188,7 +185,7 @@ class WorksTest extends TestCase
             ->test(Work::class)
             ->set('description', 'This is ML')
             ->set('skills', [$php->id, $js->id])
-            ->call('add')
+            ->call('save')
             ->assertHasErrors();
 
     }
@@ -219,7 +216,7 @@ class WorksTest extends TestCase
             ->test(Work::class)
             ->set('title','Data Ops')
             ->set('skills', [$php->id, $js->id])
-            ->call('add')
+            ->call('save')
             ->assertHasErrors();
 
     }
@@ -252,7 +249,7 @@ class WorksTest extends TestCase
             ->set('title', 12343)
             ->set('description', 'This is ML')
             ->set('skills', [$php->id, $js->id])
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['title' => 'string']);
 
     }
@@ -284,7 +281,7 @@ class WorksTest extends TestCase
             ->set('title','Data Ops')
             ->set('description',234234)
             ->set('skills', [$php->id, $js->id])
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['description' => 'string']);
 
     }
@@ -303,7 +300,7 @@ class WorksTest extends TestCase
             ->set('title','Data Ops')
             ->set('description','This is ML')
             ->set('skills', 2342)
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['skills' => 'array']);
 
     }
@@ -333,7 +330,8 @@ class WorksTest extends TestCase
         $work = WorkModel::create([
             'title' => 'Binjii',
             'description' => 'This is an ecommence platform',
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'photo' => 'photo.jpg'
         ]);
 
         $work->skills()->attach([$php->id, $js->id]);
@@ -437,10 +435,11 @@ class WorksTest extends TestCase
 
         Livewire::actingAs($user)
             ->test(Work::class)
-            ->set('new_title', 'Binjii')
-            ->set('new_description', 'E-commence app')
-            ->set('new_photo', $new_photo)
-            ->call('update', $work->id)
+            ->call('edit', $work->id)
+            ->set('title', 'Binjii')
+            ->set('description', 'E-commence app')
+            ->set('photo', $new_photo)
+            ->call('save')
             ->assertHasNoErrors();
 
         $work = WorkModel::first();

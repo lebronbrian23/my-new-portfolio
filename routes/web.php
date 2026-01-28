@@ -14,7 +14,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/skills', [Skill::class , 'render'])->name('skills');
-Route::get('/works', [Work::class, 'render'])->name('works');
+Route::view('/works', 'works')->name('works');
 Route::view('/navigation-links', 'navigation-links')->name('navigation-links');
 Route::get('/content-block', [ContentBlock::class, 'render'])->name('content-blocks');
 Route::get('/contact', [Contact::class, 'render'])->name('contact');

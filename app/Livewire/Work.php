@@ -8,110 +8,136 @@ use App\Models\Work as WorkModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use App\Models\Image;
 
 class Work extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination;
 
-    #[Validate('required|string')]
+    public ?int $editing_work_id = null;
     public $title;
-
-
-    public $new_title;
-
-    #[Validate('required|string')]
     public $description;
-
-
-    public $new_description;
-
-    #[Validate('nullable|array')]
     public $skills;
-
-
-    public $new_skills;
-
-    #[Validate('nullable|image|max:1500|mimes:jpg,jpeg,png')]
     public $photo;
+    public $current_photo;
 
-    public $new_photo;
 
+    protected $rules = [
+        'title' => 'required|string',
+        'description' => 'required|string',
+        'skills' => 'nullable|array',
+        'photo' => 'nullable|image|max:1500|mimes:jpg,jpeg,png'
+    ];
 
-    public function add()
+    public function edit($id)
     {
-
-        $this->authorize('create', WorkModel::class);
-
-        $this->validate();
-
-        $work = WorkModel::create([
-            'title' => $this->title,
-            'description' => $this->description,
-            'user_id' => Auth::user()->id
-        ]);
-
-        $work->skills()->attach($this->skills);
-
-        if( ! empty($this->photo) ){
-            Image::create([
-                'url' => $this->photo->store('works_photos', 'public'),
-                'imageable_id' => $work->id,
-                'imageable_type' =>  WorkModel::class
-            ]);
-        }
-
-        $this->reset();
-
-        session()->flash('message', 'Skill added');
-
-    }
-
-    public function update($id)
-    {
-        $this->validate([
-            'new_title' => 'required|string',
-            'new_description' => 'required|string',
-            'new_skills' => 'nullable|array',
-            'new_photo' => 'nullable|image|max:1500|mimes:jpg,jpeg,png'
-        ]);
-
-
         $work = WorkModel::where('id', $id)->first();
 
-        $this->authorize('update', $work);
+        $this->authorize('view', $work);
 
-        $work->update([
-            'title' => $this->new_title,
-            'description' => $this->new_description,
-            'user_id' => Auth::user()->id
+        $this->editing_work_id = $work->id;
+        $this->title = $work->title;
+        $this->description = $work->description;
+        $this->skills = $work->skills->pluck('id')->toArray();
+        $this->current_photo = $work->image->url;
+    }
+
+    public function cancel_edit()
+    {
+        $this->resetForm();
+    }
+
+    protected function resetForm(): void
+    {
+        $this->reset([
+            'editing_work_id',
+            'title',
+            'description',
+            'skills',
+            'photo',
         ]);
+    }
 
-        if ( !empty($this->new_skills) ) {
-            $work->skills()->sync($this->new_skills);
-        }
+    protected function data(): array
+    {
+        return [
+            'title' => $this->title,
+            'description' => $this->description,
+            'skills' => $this->skills,
+            'photo' => $this->photo,
+        ];
+    }
 
-        if( !empty($this->new_photo) ){
-            $image = Image::where('id', $work->image->id)->first();
 
-            if ($work->image) {
-                $image->update([
-                    'url' => $this->new_photo->store('works_photos', 'public'),
-                ]);
-            } else {
+
+    public function save()
+    {
+        $this->validate();
+
+        if( $this->editing_work_id ) {
+
+            $work = WorkModel::where('id', $this->editing_work_id)->first();
+
+            $this->authorize('update', $work);
+
+            $work->update([
+                'title' => $this->title,
+                'description' => $this->description,
+                'user_id' => Auth::user()->id
+            ]);
+
+            if ( !empty($this->skills) ) {
+                $work->skills()->sync($this->skills);
+            }
+
+            if( !empty($this->photo) ){
+                $image = Image::where('id', $work->image->id)->first();
+
+                if ($work->image) {
+                    $image->update([
+                        'url' => $this->photo->store('works_photos', 'public'),
+                    ]);
+                } else {
+                    Image::create([
+                        'url' => $this->photo->store('works_photos', 'public'),
+                        'imageable_id' => $work->id,
+                        'imageable_type' =>  WorkModel::class
+                    ]);
+                }
+            }
+
+            session()->flash('message', 'Skill updated');
+
+        } else {
+            $this->authorize('create', WorkModel::class);
+
+
+            $work = WorkModel::create([
+                'title' => $this->title,
+                'description' => $this->description,
+                'user_id' => Auth::user()->id
+            ]);
+
+            if ( ! empty($this->skills) ) {
+                $work->skills()->attach($this->skills);
+            }
+
+            if( ! empty($this->photo) ){
                 Image::create([
                     'url' => $this->photo->store('works_photos', 'public'),
                     'imageable_id' => $work->id,
                     'imageable_type' =>  WorkModel::class
                 ]);
             }
+
+            session()->flash('message', 'Skill added');
         }
 
-        $this->reset();
-
-        session()->flash('message', 'Skill updated');
+        $this->resetForm();
 
     }
+
 
     public function delete($id)
     {
@@ -121,6 +147,10 @@ class Work extends Component
 
         $work->skills()->detach();
 
+        if ( $work->image ) {
+            $work->image->delete();
+        }
+
         $work->delete();
 
         session()->flash('message','Work deleted');
@@ -129,6 +159,7 @@ class Work extends Component
     public function render()
     {
         $works = WorkModel::select(
+            'id',
             'title',
             'description',
             'user_id'
