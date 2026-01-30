@@ -66,6 +66,10 @@ class NavigationLink extends Component
     public function save() {
 
 
+        if (! Auth::check()) {
+            abort(403);
+        }
+        
         $this->validate();
 
         if ( $this->editing_link_id)
@@ -144,6 +148,6 @@ class NavigationLink extends Component
         ->latest()
         ->paginate(10);
 
-        return view('livewire.navigation-link', ['title' => 'Navigation Links' , 'links' => $links ]);
+        return view('livewire.navigation-link', ['page_title' => 'Manage Navigation Links' , 'links' => $links ]);
     }
 }

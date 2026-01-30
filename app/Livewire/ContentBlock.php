@@ -45,7 +45,7 @@ class ContentBlock extends Component
         ];
 
         if ($context === 'update') {
-            
+
             return [
                 'new_title' => $baseRules['title'],
                 'new_description' => $baseRules['description'],
@@ -61,6 +61,10 @@ class ContentBlock extends Component
 
     public function add()
     {
+        if (! Auth::check()) {
+            abort(403);
+        }
+        
         $this->authorize('create', ContentBlockModel::class);
 
         $this->validate($this->rules('add'));
@@ -121,7 +125,7 @@ class ContentBlock extends Component
             ->paginate(10);
 
         return view('livewire.content-block', [
-            'title' => 'Content Blocks',
+            'page_title' => 'Content Blocks',
             'content_blocks' => $content_blocks,
         ]);
     }

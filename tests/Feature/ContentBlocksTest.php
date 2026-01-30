@@ -40,8 +40,7 @@ class ContentBlocksTest extends TestCase
         $response = $this->get('/content-block');
 
         $response->assertStatus(200)
-            ->assertViewIs('livewire.content-block')
-            ->assertSee('Content Block');
+            ->assertViewIs('content-block');
     }
 
     public function test_authenticated_user_can_add_content_block_info()

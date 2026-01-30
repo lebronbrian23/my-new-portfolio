@@ -21,7 +21,7 @@ class SkillPolicy
      */
     public function view(User $user, Skill $skill): bool
     {
-        return false;
+        return true;
     }
 
     /**

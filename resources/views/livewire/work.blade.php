@@ -14,7 +14,7 @@
         </flux:badge>
     @endif
 
-    <h2 class="text-2xl font-semibold mb-4">{{ __('Manage Works') }}</h2>
+    <h2 class="text-2xl font-semibold mb-4">{{ __($page_title) }}</h2>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 

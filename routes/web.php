@@ -13,11 +13,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/skills', [Skill::class , 'render'])->name('skills');
+Route::view('/skills', 'skills')->name('skills');
 Route::view('/works', 'works')->name('works');
 Route::view('/navigation-links', 'navigation-links')->name('navigation-links');
-Route::get('/content-block', [ContentBlock::class, 'render'])->name('content-blocks');
-Route::get('/contact', [Contact::class, 'render'])->name('contact');
+Route::view('/content-block', 'content-block')->name('content-blocks');
+Route::view('/contact', 'contact')->name('contact');
 
 
 Route::view('dashboard', 'dashboard')

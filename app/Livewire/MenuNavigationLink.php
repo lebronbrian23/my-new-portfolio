@@ -26,6 +26,6 @@ class MenuNavigationLink extends Component
         ->orderby('link_position')
         ->paginate(10);
 
-        return view('livewire.menu-navigation-link', ['title' => 'Navigation Links' , 'links' => $links ]);
+        return view('livewire.menu-navigation-link', ['page_title' => 'Menu Navigation Links' , 'links' => $links ]);
     }
 }

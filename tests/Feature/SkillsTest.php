@@ -35,8 +35,7 @@ class SkillsTest extends TestCase
         $response = $this->get('/skills');
 
         $response->assertStatus(200)
-            ->assertViewIs('livewire.skill')
-            ->assertViewHas(['skills', 'title']);
+            ->assertViewIs('skills');
 
     }
 
@@ -53,7 +52,7 @@ class SkillsTest extends TestCase
             ->set('name', 'PHP')
             ->set('description', 'This is PHP')
             ->set('icon', 'fa-php')
-            ->call('add')
+            ->call('save')
             ->assertHasNoErrors();
 
         $this->assertDatabaseCount('skills', 1);
@@ -76,7 +75,7 @@ class SkillsTest extends TestCase
             ->set('name', 'PHP')
             ->set('description', 'This is PHP')
             ->set('icon', 'fa-php')
-            ->call('add')
+            ->call('save')
             ->assertForbidden();
 
         $this->assertDatabaseCount('skills', 0);
@@ -95,7 +94,7 @@ class SkillsTest extends TestCase
         Livewire::actingAs($user)
             ->test(Skill::class)
             ->set('name','')
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['name' => 'required']);
 
     }
@@ -110,7 +109,7 @@ class SkillsTest extends TestCase
         Livewire::actingAs($user)
             ->test(Skill::class)
             ->set('name',123423)
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['name' => 'string']);
 
     }
@@ -126,7 +125,7 @@ class SkillsTest extends TestCase
             ->test(Skill::class)
             ->set('name','PHP')
             ->set('description',123423)
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['description' => 'string']);
 
     }
@@ -142,7 +141,7 @@ class SkillsTest extends TestCase
             ->test(Skill::class)
             ->set('name','PHP')
             ->set('icon',123423)
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['icon' => 'string']);
 
     }
@@ -166,10 +165,11 @@ class SkillsTest extends TestCase
 
         Livewire::actingAs($user)
             ->test(Skill::class)
-            ->set('new_name', 'PHP')
-            ->set('new_description', 'This is PHP')
-            ->set('new_icon', 'fa-php')
-            ->call('update', $skill->id)
+            ->call('edit', $skill->id)
+            ->set('name', 'PHP')
+            ->set('description', 'This is PHP')
+            ->set('icon', 'fa-php')
+            ->call('save')
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('skills', [
@@ -198,10 +198,10 @@ class SkillsTest extends TestCase
         $this->assertDatabaseCount('skills', 1);
 
         Livewire::test(Skill::class)
-            ->set('new_name', 'PHP')
-            ->set('new_description', 'This is PHP')
-            ->set('new_icon', 'fa-php')
-            ->call('update', $skill->id)
+            ->set('name', 'PHP')
+            ->set('description', 'This is PHP')
+            ->set('icon', 'fa-php')
+            ->call('save')
             ->assertForbidden();
 
     }

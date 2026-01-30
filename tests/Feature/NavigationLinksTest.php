@@ -189,11 +189,12 @@ class NavigationLinksTest extends TestCase
 
         Livewire::actingAs($user)
             ->test(NavigationLink::class)
+            ->call('edit', $link->id)
             ->set('link_name', 'Home')
             ->set('link_route', 'skills')
             ->set('link_position', 1)
             ->set('link_icon', 'bolt')
-            ->call('save', $link->id)
+            ->call('save')
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('navigation_links',[
@@ -227,7 +228,7 @@ class NavigationLinksTest extends TestCase
             ->set('link_route', 'skills')
             ->set('link_icon', 'bolt')
             ->set('link_position', 1)
-            ->call('save', $link->id)
+            ->call('save')
             ->assertForbidden();
 
     }

@@ -70,9 +70,12 @@ class Work extends Component
     }
 
 
-
     public function save()
     {
+        if (! Auth::check()) {
+            abort(403);
+        }
+        
         $this->validate();
 
         if( $this->editing_work_id ) {
@@ -171,9 +174,6 @@ class Work extends Component
         ->latest()
         ->paginate(10);
 
-        return view('livewire.work', [
-            'title' => 'Works',
-            'works' => $works
-        ]);
+        return view('livewire.work', ['page_title' => 'Manage Works', 'works' => $works]);
     }
 }

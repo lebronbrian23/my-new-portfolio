@@ -6,85 +6,116 @@ use Livewire\Component;
 use App\Models\Contact as ContactModel;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Livewire\WithPagination;
 
 class Contact extends Component
 {
+    use WithPagination;
 
+    public ?int $editing_contact_id = null;
     public $link;
-    public $new_link;
-
     public $icon;
-    public $new_icon;
-
     public $status;
-    public $new_status;
-
     public $type;
-    public $new_type;
 
-    protected function rules($context = 'add'): array
+    protected function rules(): array
     {
-        $base_rules = [
-            'icon' => 'string',
-            'type' => ['required', Rule::in(ContactModel::TYPES)],
-            'link' => 'string|required',
-            'status' => ['nullable', Rule::in(ContactModel::STATUSES)]
-
+        return [
+            'icon' => 'nullable|string',
+            'type' => [
+                'required',
+                Rule::in(ContactModel::TYPES),
+                Rule::unique('contacts', 'type')
+                    ->ignore($this->editing_contact_id),
+            ],
+            'link' => 'required|string',
+            'status' => [
+                'nullable',
+                Rule::in(ContactModel::STATUSES),
+            ],
         ];
-
-        if ($context === 'update') {
-            return [
-                'new_icon' => $base_rules['icon'],
-                'new_type' => $base_rules['type'],
-                'new_link' => $base_rules['link'],
-                'new_status' => $base_rules['status']
-            ];
-        }
-
-
-        return $base_rules;
-
     }
 
-    public function add()
+
+    protected function data(): array
     {
-
-        $this->authorize('create', ContactModel::class);
-
-        $this->validate($this->rules('add'));
-
-        ContactModel::create([
+        return [
             'icon' => $this->icon,
             'type' => $this->type,
             'link' => $this->link,
-            'user_id' => Auth::user()->id
-        ]);
-
-        $this->reset();
-
-        session()->flash('message', 'Contact added');
+            'status' => $this->status,
+        ];
     }
 
+    protected function resetForm(): void
+    {
+        $this->reset([
+            'editing_contact_id',
+            'icon',
+            'type',
+            'link',
+            'status',
+        ]);
+    }
 
-    public function update($id)
+    public function edit($id)
     {
         $contact = ContactModel::where('id', $id)->first();
 
-        $this->authorize('update', $contact);
+        $this->authorize('view', $contact);
 
-        $this->validate($this->rules('update'));
+        $this->editing_contact_id = $contact->id;
+        $this->icon = $contact->icon;
+        $this->type = $contact->type;
+        $this->link = $contact->link;
+        $this->status = $contact->status;
+    }
 
-        $contact->update([
-            'icon' => $this->new_icon,
-            'type' => $this->new_type,
-            'link' => $this->new_link,
-            'status' => $this->new_status
-        ]);
+    public function cancel_edit()
+    {
+        $this->resetForm();
+    }
 
-        $this->reset();
+    public function save()
+    {
 
-        session()->flash('message', 'Contact updated');
+        if (! Auth::check()) {
+            abort(403);
+        }
 
+        $this->validate();
+
+        if ( $this->editing_contact_id ) {
+
+            $contact = ContactModel::where('id', $this->editing_contact_id)->first();
+
+            $this->authorize('update', $contact);
+
+            $contact->update([
+                'icon' => $this->icon,
+                'type' => $this->type,
+                'link' => $this->link,
+                'status' => $this->status
+            ]);
+
+            session()->flash('message', 'Contact updated');
+
+        }  else {
+
+            $this->authorize('create', ContactModel::class);
+
+            ContactModel::create([
+                'icon' => $this->icon,
+                'type' => $this->type,
+                'link' => $this->link,
+                'user_id' => Auth::user()->id
+            ]);
+
+            session()->flash('message', 'Contact added');
+
+        }
+
+        $this->resetForm();
     }
 
     public function delete($id)
@@ -100,8 +131,8 @@ class Contact extends Component
 
     public function render()
     {
-        $contacts = ContactModel::all();
+        $contacts = ContactModel::paginate(10);
 
-        return view('livewire.contact',['title' => 'Contact' , 'contacts' => $contacts]);
+        return view('livewire.contact',['page_title' => 'Contact' , 'contacts' => $contacts]);
     }
 }

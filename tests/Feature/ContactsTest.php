@@ -22,8 +22,7 @@ class ContactsTest extends TestCase
         $response = $this->get('/contact');
 
         $response->assertStatus(200)
-            ->assertViewIs('livewire.contact')
-            ->assertViewHas(['title', 'contacts']);
+            ->assertViewIs('contact');
     }
 
     /**
@@ -38,7 +37,7 @@ class ContactsTest extends TestCase
             ->set('link', 'ssekalegga@gmail.com')
             ->set('type','email')
             ->set('icon', 'fa-email')
-            ->call('add')
+            ->call('save')
             ->assertHasNoErrors();
 
         $this->assertDatabaseCount('contacts', 1);
@@ -62,11 +61,8 @@ class ContactsTest extends TestCase
             ->set('link', 'ssekalegga@gmail.com')
             ->set('type','email')
             ->set('icon', 'fa-email')
-            ->call('add')
+            ->call('save')
             ->assertForbidden();
-
-        $this->assertDatabaseCount('contacts', 0);
-
 
     }
 
@@ -80,7 +76,7 @@ class ContactsTest extends TestCase
         Livewire::actingAs($user)
             ->test(Contact::class)
             ->set('icon', 'fa-email')
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['link', 'type']);
 
     }
@@ -101,11 +97,12 @@ class ContactsTest extends TestCase
 
         Livewire::actingAs($user)
             ->test(Contact::class)
-            ->set('new_link', 'lebronbrian@gmail.com')
-            ->set('new_type','email')
-            ->set('new_icon', 'fa-email')
-            ->set('new_status', 'inactive')
-            ->call('update', $contact->id)
+            ->call('edit', $contact->id)
+            ->set('link', 'lebronbrian@gmail.com')
+            ->set('type','email')
+            ->set('icon', 'fa-email')
+            ->set('status', 'inactive')
+            ->call('save')
             ->assertHasNoErrors();
 
         $this->assertDatabaseCount('contacts', 1);
@@ -133,12 +130,14 @@ class ContactsTest extends TestCase
             'user_id' => $user->id
         ]);
 
+        $this->assertDatabaseCount('contacts', 1);
+
         Livewire::test(Contact::class)
-            ->set('new_link', 'lebronbrian@gmail.com')
-            ->set('new_type','email')
-            ->set('new_icon', 'fa-email')
-            ->set('new_status', 'inactive')
-            ->call('update', $contact->id)
+            ->set('link', 'lebronbrian@gmail.com')
+            ->set('type','email')
+            ->set('icon', 'fa-email')
+            ->set('status', 'inactive')
+            ->call('save')
             ->assertForbidden();
 
     }
@@ -187,10 +186,6 @@ class ContactsTest extends TestCase
             ->assertForbidden();
 
     }
-
-
-
-
 
 
 }

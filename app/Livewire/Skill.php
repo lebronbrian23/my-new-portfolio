@@ -8,66 +8,101 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Skill as SkillModel;
+use Livewire\WithPagination;
 
 class Skill extends Component
 {
 
-    #[Validate('required|string')]
+    use WithPagination;
+
+    public ?int $editing_skill_id = null;
     public $name;
-
-    public $new_name;
-
-    #[Validate('nullable|string')]
     public $description;
-
-    public $new_description;
-
-    #[Validate('nullable|string')]
     public $icon;
 
-    public $new_icon;
+    protected function rules() {
+        return [
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'icon' => 'nullable|string',
+        ];
+    }
 
-    public function add()
+    protected function data(){
+        return [
+            'name' => $this->name,
+            'description' => $this->description,
+            'icon' => $this->icon,
+        ];
+    }
+
+    protected function resetForm(): void
     {
-        $this->authorize('create', SkillModel::class);
+        $this->reset([
+            'editing_skill_id',
+            'name',
+            'description',
+            'icon',
+        ]);
+    }
 
+    public function cancel_edit()
+    {
+        $this->resetForm();
+    }
+
+    public function save()
+    {
+
+        if (! Auth::check()) {
+            abort(403);
+        }
+        
         $this->validate();
 
-        $skill = new SkillModel();
-        $skill->name = $this->name;
-        $skill->description = $this->description;
-        $skill->icon = $this->icon;
-        $skill->user_id = Auth::user()->id;
-        $skill->save();
+        if ( $this->editing_skill_id ) {
 
-        $this->reset();
+            $skill = SkillModel::where('id', $this->editing_skill_id)->first();
 
-        session()->flash('message', 'Skill Added');
+            $this->authorize('update', $skill);
+
+            $skill->update([
+                'name' => $this->name,
+                'description' => $this->description,
+                'icon' => $this->icon,
+            ]);
+
+            session()->flash('message', 'Skill Updated');
+
+        } else {
+
+            $this->authorize('create', SkillModel::class);
+
+
+            $skill = new SkillModel();
+            $skill->name = $this->name;
+            $skill->description = $this->description;
+            $skill->icon = $this->icon;
+            $skill->user_id = Auth::user()->id;
+            $skill->save();
+
+            session()->flash('message', 'Skill Added');
+        }
+
+         $this->resetForm();
 
     }
 
-    public function update($id)
+    public function edit($id)
     {
-        $this->validate([
-            'new_name' => 'required|string',
-            'new_description' => 'required|string',
-            'new_icon' => 'nullable|string',
-        ]);
-
         $skill = SkillModel::where('id', $id)->first();
 
-        $this->authorize('update', $skill);
+        $this->authorize('view', $skill);
 
-        $skill->update([
-            'name' => $this->new_name,
-            'description' => $this->new_description,
-            'icon' => $this->new_icon,
-        ]);
-
-        $this->reset();
-
-        session()->flash('message', 'Skill Updated');
-
+        $this->editing_skill_id = $skill->id;
+        $this->name = $skill->name;
+        $this->description = $skill->description;
+        $this->icon = $skill->icon;
     }
 
     public function delete($id)
@@ -84,8 +119,8 @@ class Skill extends Component
 
     public function render()
     {
-        $skills = SkillModel::all();
+        $skills = SkillModel::paginate(10);
 
-        return view('livewire.skill',['skills' => $skills , 'title' => 'Skills']);
+        return view('livewire.skill',['skills' => $skills , 'page_title' => 'Manage Skills']);
     }
 }
