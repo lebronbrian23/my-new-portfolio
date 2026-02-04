@@ -57,7 +57,7 @@ class Skill extends Component
         if (! Auth::check()) {
             abort(403);
         }
-        
+
         $this->validate();
 
         if ( $this->editing_skill_id ) {
@@ -121,6 +121,6 @@ class Skill extends Component
     {
         $skills = SkillModel::paginate(10);
 
-        return view('livewire.skill',['skills' => $skills , 'page_title' => 'Manage Skills']);
+        return view('livewire.admin.skill',['skills' => $skills , 'page_title' => 'Manage Skills']);
     }
 }

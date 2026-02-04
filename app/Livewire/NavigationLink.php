@@ -7,6 +7,7 @@ use App\Models\NavigationLink as NavigationLinkModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Validate;
+use Illuminate\Validation\Rule;
 
 class NavigationLink extends Component
 {
@@ -19,16 +20,23 @@ class NavigationLink extends Component
     public $link_position;
     public $link_location = 'header';
     public $link_status = 'active';
+    public $shows_on_frontend = 'yes';
 
     protected function rules()
     {
         return [
-            'link_name' => 'required|string',
+            'link_name' => [
+                'required',
+                Rule::in(NavigationLinkModel::ROUTE_NAMES),
+                Rule::unique('navigation_links', 'link_name')
+                    ->ignore($this->editing_link_id),
+            ],
             'link_route' => 'required|string',
             'link_position' => 'nullable|integer',
             'link_icon' => 'nullable|string',
             'link_status' => 'nullable|string',
             'link_location' => 'nullable|string',
+            'shows_on_frontend' => 'nullable|string',
         ];
     }
 
@@ -41,6 +49,7 @@ class NavigationLink extends Component
             'link_position' => $this->link_position,
             'link_location' => $this->link_location,
             'link_status' => $this->link_status,
+            'shows_on_frontend' => $this->shows_on_frontend,
         ];
     }
 
@@ -59,6 +68,7 @@ class NavigationLink extends Component
             'link_position',
             'link_location',
             'link_status',
+            'shows_on_frontend',
         ]);
     }
 
@@ -69,7 +79,7 @@ class NavigationLink extends Component
         if (! Auth::check()) {
             abort(403);
         }
-        
+
         $this->validate();
 
         if ( $this->editing_link_id)
@@ -113,6 +123,7 @@ class NavigationLink extends Component
             'link_position' => $link->link_position,
             'link_location' => $link->link_location,
             'link_status' => $link->link_status,
+            'shows_on_frontend' => $link->shows_on_frontend,
         ]);
 
     }
@@ -141,13 +152,15 @@ class NavigationLink extends Component
             'link_location',
             'link_status',
             'user_id',
+            'shows_on_frontend'
             )
         ->with([
             'content_block',
         ])
         ->latest()
+        ->orderby('link_position')
         ->paginate(10);
 
-        return view('livewire.navigation-link', ['page_title' => 'Manage Navigation Links' , 'links' => $links ]);
+        return view('livewire.admin.navigation-link', ['page_title' => 'Manage Navigation Links' , 'links' => $links ]);
     }
 }

@@ -37,10 +37,10 @@ class ContentBlocksTest extends TestCase
             'navigation_link_id' => $link->id
         ]);
 
-        $response = $this->get('/content-block');
+        $response = $this->actingAs($user)->get('/admin/content-blocks');
 
         $response->assertStatus(200)
-            ->assertViewIs('content-block');
+            ->assertViewIs('admin.content-block');
     }
 
     public function test_authenticated_user_can_add_content_block_info()
@@ -65,7 +65,7 @@ class ContentBlocksTest extends TestCase
             ->set('content_block_section', 'about')
             ->set('content_block_status', 'active')
             ->set('navigation_link_id', $link->id)
-            ->call('add')
+            ->call('save')
             ->assertHasNoErrors();
 
         $content_block = ContentBlockModel::first();
@@ -105,7 +105,7 @@ class ContentBlocksTest extends TestCase
             ->set('content_block_section', 'about')
             ->set('content_block_status', 'active')
             ->set('navigation_link_id', $link->id)
-            ->call('add')
+            ->call('save')
             ->assertForbidden();
     }
 
@@ -115,7 +115,7 @@ class ContentBlocksTest extends TestCase
 
         Livewire::actingAs($user)
             ->test(ContentBlock::class)
-            ->call('add')
+            ->call('save')
             ->assertHasErrors(['title', 'description']);
     }
 
@@ -152,13 +152,14 @@ class ContentBlocksTest extends TestCase
 
         Livewire::actingAs($user)
             ->test(ContentBlock::class)
-            ->set('new_title', 'About Updated')
-            ->set('new_description', 'Updated description')
-            ->set('new_photo', $photo)
-            ->set('new_content_block_section', 'about')
-            ->set('new_content_block_status', 'inactive')
-            ->set('new_navigation_link_id', $link2->id)
-            ->call('update', $content_block->id)
+            ->call('edit', $content_block->id)
+            ->set('title', 'About Updated')
+            ->set('description', 'Updated description')
+            ->set('photo', $photo)
+            ->set('content_block_section', 'about')
+            ->set('content_block_status', 'inactive')
+            ->set('navigation_link_id', $link2->id)
+            ->call('save')
             ->assertHasNoErrors();
 
         $updated = ContentBlockModel::first();
@@ -196,13 +197,14 @@ class ContentBlocksTest extends TestCase
         $photo = UploadedFile::fake()->image('updated.jpg');
 
         Livewire::test(ContentBlock::class)
-            ->set('new_title', 'About Updated')
-            ->set('new_description', 'Updated description')
-            ->set('new_photo', $photo)
-            ->set('new_content_block_section', 'about')
-            ->set('new_content_block_status', 'inactive')
-            ->set('new_navigation_link_id', $link->id)
-            ->call('update', $content_block->id)
+            ->set('title', 'About Updated')
+
+            ->set('description', 'Updated description')
+            ->set('photo', $photo)
+            ->set('content_block_section', 'about')
+            ->set('content_block_status', 'inactive')
+            ->set('navigation_link_id', $link->id)
+            ->call('save')
             ->assertForbidden();
     }
 

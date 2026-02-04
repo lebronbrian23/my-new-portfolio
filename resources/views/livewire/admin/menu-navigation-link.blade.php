@@ -1,7 +1,7 @@
 <div>
     @foreach ( $links as $link)
         @php
-            $href= $link->link_route && Route::has($link->link_route) ? route($link->link_route) : "#";
+            $href= $link->admin_link_route && Route::has($link->admin_link_route) ? route($link->admin_link_route) : "#";
             $current= $link->link_route && Route::has($link->link_route) && request()->routeIs($link->link_route) ? true : false;
         @endphp
 

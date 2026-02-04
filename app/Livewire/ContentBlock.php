@@ -7,35 +7,27 @@ use App\Models\ContentBlock as ContentBlockModel;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Livewire\WithPagination;
 
 class ContentBlock extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     public $title;
-    public $new_title;
-
+    public ?int $editing_content_block_id = null;
     public $description;
-    public $new_description;
-
     public $photo;
-    public $new_photo;
-
+    public $current_photo;
     public ?string $content_block_section = null;
-    public ?string $new_content_block_section = null;
-
     public string $content_block_status = 'active';
-    public string $new_content_block_status;
-
     public ?int $navigation_link_id = null;
-    public ?int $new_navigation_link_id = null;
 
     /**
      * Validation rules
      */
-    protected function rules($context = 'add'): array
+    protected function rules(): array
     {
-        $baseRules = [
+        return [
             'title' => 'required|string',
             'description' => 'required|string',
             'photo' => 'nullable|image|max:1500|mimes:jpg,jpeg,png',
@@ -44,66 +36,95 @@ class ContentBlock extends Component
             'navigation_link_id' => 'nullable|integer',
         ];
 
-        if ($context === 'update') {
-
-            return [
-                'new_title' => $baseRules['title'],
-                'new_description' => $baseRules['description'],
-                'new_photo' => $baseRules['photo'],
-                'new_content_block_section' => $baseRules['content_block_section'],
-                'new_content_block_status' => $baseRules['content_block_status'],
-                'new_navigation_link_id' => $baseRules['navigation_link_id'],
-            ];
-        }
-
-        return $baseRules;
     }
 
-    public function add()
+    public function save()
     {
         if (! Auth::check()) {
             abort(403);
         }
-        
-        $this->authorize('create', ContentBlockModel::class);
 
-        $this->validate($this->rules('add'));
+        $this->validate();
 
-        ContentBlockModel::create([
+        if ( $this->editing_content_block_id ) {
+
+            $content_block = ContentBlockModel::findOrFail($this->editing_content_block_id);
+
+            $this->authorize('update', $content_block);
+
+            $content_block->update([
+                'title' => $this->title,
+                'description' => $this->description,
+                'photo' => $this->photo ? $this->photo->store('content_block_photos', 'public') : $content_block->image->url,
+                'content_block_section' => $this->content_block_section,
+                'content_block_status' => $this->content_block_status,
+                'navigation_link_id' => $this->navigation_link_id,
+            ]);
+
+            session()->flash('message', 'Content block updated');
+
+        } else {
+
+            $this->authorize('create', ContentBlockModel::class);
+
+            ContentBlockModel::create([
+                'title' => $this->title,
+                'description' => $this->description,
+                'photo' => $this->photo ? $this->photo->store('content_block_photos', 'public') : null,
+                'user_id' => Auth::user()->id,
+                'content_block_section' => $this->content_block_section,
+                'content_block_status' => $this->content_block_status,
+                'navigation_link_id' => $this->navigation_link_id,
+            ]);
+
+            session()->flash('message', 'Content block added');
+
+        }
+
+          $this->resetForm();
+
+    }
+
+    protected function resetForm(): void
+    {
+        $this->reset([
+            'editing_content_block_id',
+            'title',
+            'description',
+            'photo',
+            'current_photo',
+            'content_block_section',
+            'content_block_status',
+            'navigation_link_id',
+        ]);
+    }
+
+    protected function data(): array
+    {
+        return [
             'title' => $this->title,
             'description' => $this->description,
-            'photo' => $this->photo ? $this->photo->store('content_block_photos', 'public') : null,
-            'user_id' => Auth::user()->id,
+            'photo' => $this->photo,
             'content_block_section' => $this->content_block_section,
             'content_block_status' => $this->content_block_status,
             'navigation_link_id' => $this->navigation_link_id,
-        ]);
-
-        $this->reset();
-
-        session()->flash('message', 'Content block added');
+        ];
     }
 
-    public function update($id)
+    public function edit($id)
     {
-        $content_block = ContentBlockModel::findOrFail($id);
+        $content_block = ContentBlockModel::where('id', $id)->first();
 
-        $this->authorize('update', $content_block);
+        $this->authorize('view', $content_block);
 
-        $this->validate($this->rules('update'));
+        $this->editing_content_block_id = $content_block->id;
+        $this->title = $content_block->title;
+        $this->description = $content_block->description;
+        $this->content_block_section = $content_block->content_block_section;
+        $this->content_block_status = $content_block->content_block_status;
+        $this->navigation_link_id = $content_block->navigation_link_id;
+        $this->current_photo = $content_block->image ? $content_block->image->url : null;
 
-        $content_block->update([
-            'title' => $this->new_title,
-            'description' => $this->new_description,
-            'photo' => $this->new_photo ? $this->new_photo->store('content_block_photos', 'public') : $content_block->photo,
-            'content_block_section' => $this->new_content_block_section,
-            'content_block_status' => $this->new_content_block_status,
-            'navigation_link_id' => $this->new_navigation_link_id,
-        ]);
-
-        $this->reset();
-
-        session()->flash('message', 'Content block updated');
     }
 
 
@@ -124,7 +145,7 @@ class ContentBlock extends Component
             ->latest()
             ->paginate(10);
 
-        return view('livewire.content-block', [
+        return view('livewire.admin.content-block', [
             'page_title' => 'Content Blocks',
             'content_blocks' => $content_blocks,
         ]);

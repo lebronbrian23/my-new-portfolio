@@ -41,10 +41,10 @@ class NavigationLinksTest extends TestCase
             'navigation_link_id' => $link->id
         ]);
 
-        $response = $this->get('navigation-links');
+        $response = $this->actingAs($user)->get('/admin/navigation-links');
 
         $response->assertStatus(200)
-            ->assertViewIs('navigation-links');
+            ->assertViewIs('admin.navigation-links');
 
     }
 
@@ -135,7 +135,7 @@ class NavigationLinksTest extends TestCase
             ->set('link_route', 'skills')
             ->set('link_position', 1)
             ->call('save')
-            ->assertHasErrors(['link_name' => 'string']);
+            ->assertHasErrors(['link_name']);
     }
 
     /**

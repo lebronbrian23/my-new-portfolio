@@ -14,6 +14,7 @@ class ContentBlock extends Model
         'work',
         'skill',
         'contact',
+        'resume'
     ];
 
     public const STATUSES = [

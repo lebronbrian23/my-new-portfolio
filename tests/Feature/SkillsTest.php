@@ -20,7 +20,10 @@ class SkillsTest extends TestCase
      */
     public function test_skills_view_displays(): void
     {
-        $response = $this->get('/skills');
+
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/admin/skills');
 
         $response->assertStatus(200);
     }
@@ -32,10 +35,12 @@ class SkillsTest extends TestCase
     public function test_can_fetch_skills()
     {
 
-        $response = $this->get('/skills');
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/admin/skills');
 
         $response->assertStatus(200)
-            ->assertViewIs('skills');
+            ->assertViewIs('admin.skills');
 
     }
 

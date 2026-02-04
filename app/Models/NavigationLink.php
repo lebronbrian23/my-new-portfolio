@@ -7,7 +7,18 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class NavigationLink extends Model
 {
-    //
+
+    public const ROUTE_NAMES = [
+        'Home',
+        'About',
+        'Works',
+        'Skills',
+        'Contact',
+        'Content Blocks',
+        'Resume',
+        'Navigation Links',
+    ];
+
     protected $fillable = [
         'link_name',
         'link_route',
@@ -15,7 +26,8 @@ class NavigationLink extends Model
         'link_position',
         'link_location',
         'link_status',
-        'user_id'
+        'user_id',
+        'shows_on_frontend'
     ];
 
 

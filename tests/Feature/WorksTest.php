@@ -22,7 +22,9 @@ class WorksTest extends TestCase
      */
     public function test_can_display_works_page(): void
     {
-        $response = $this->get('/works');
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/admin/works');
 
         $response->assertStatus(200);
     }
@@ -32,10 +34,12 @@ class WorksTest extends TestCase
      */
     public function test_can_fetch_works()
     {
-        $response = $this->get('/works');
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/admin/works');
 
         $response->assertStatus(200)
-            ->assertViewIs('works');
+            ->assertViewIs('admin.works');
 
     }
 

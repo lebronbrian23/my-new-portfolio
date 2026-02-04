@@ -133,6 +133,6 @@ class Contact extends Component
     {
         $contacts = ContactModel::paginate(10);
 
-        return view('livewire.contact',['page_title' => 'Contact' , 'contacts' => $contacts]);
+        return view('livewire.admin.contact',['page_title' => 'Contact' , 'contacts' => $contacts]);
     }
 }

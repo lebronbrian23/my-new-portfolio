@@ -19,10 +19,12 @@ class ContactsTest extends TestCase
      */
     public function test_contact_page_displays(): void
     {
-        $response = $this->get('/contact');
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/admin/contacts');
 
         $response->assertStatus(200)
-            ->assertViewIs('contact');
+            ->assertViewIs('admin.contact');
     }
 
     /**

@@ -21,7 +21,7 @@ class ContentBlockPolicy
      */
     public function view(User $user, ContentBlock $content_block): bool
     {
-        return false;
+        return true;
     }
 
     /**

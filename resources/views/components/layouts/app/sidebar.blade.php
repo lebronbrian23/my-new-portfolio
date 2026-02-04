@@ -24,7 +24,6 @@
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:navlist.item>
-
                     <livewire:menu-navigation-link />
                 </flux:navlist.group>
             </flux:navlist>

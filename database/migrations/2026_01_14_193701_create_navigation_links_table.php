@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('link_icon')->nullable();
             $table->enum('link_location',['header', 'footer'])->default('header');
             $table->enum('link_status',['active','inactive'])->default('active');
+            $table->enum('shows_on_frontend',['yes','no'])->default('yes');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

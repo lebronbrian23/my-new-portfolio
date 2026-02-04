@@ -16,8 +16,9 @@ Route::get('/', function () {
 Route::view('/skills', 'skills')->name('skills');
 Route::view('/works', 'works')->name('works');
 Route::view('/navigation-links', 'navigation-links')->name('navigation-links');
-Route::view('/content-block', 'content-block')->name('content-blocks');
-Route::view('/contact', 'contact')->name('contact');
+Route::view('/content-blocks', 'content-block')->name('content-blocks');
+Route::view('/contacts', 'contact')->name('contacts');
+Route::view('/about', 'about')->name('about');
 
 
 Route::view('dashboard', 'dashboard')
@@ -26,7 +27,15 @@ Route::view('dashboard', 'dashboard')
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::view('/admin', 'dashboard');
 
+    Route::view('/admin/skills', 'admin.skills')->name('admin.skills');
+    Route::view('/admin/works', 'admin.works')->name('admin.works');
+    Route::view('/admin/navigation-links', 'admin.navigation-links')->name('admin.navigation-links');
+    Route::view('/admin/content-blocks', 'admin.content-block')->name('admin.content-blocks');
+    Route::view('/admin/contacts', 'admin.contact')->name('admin.contacts');
+    Route::view('/admin/about', 'admin.about')->name('admin.about');
+    Route::view('/admin/resume', 'admin.resume')->name('admin.resume');
 
     Route::redirect('settings', 'settings/profile');
 
