@@ -20,6 +20,7 @@ class Work extends Component
     public $description;
     public $skills;
     public $photo;
+    public $url;
     public $current_photo;
 
 
@@ -27,6 +28,7 @@ class Work extends Component
         'title' => 'required|string',
         'description' => 'required|string',
         'skills' => 'nullable|array',
+        'url' => 'nullable|url',
         'photo' => 'nullable|image|max:1500|mimes:jpg,jpeg,png'
     ];
 
@@ -38,6 +40,7 @@ class Work extends Component
 
         $this->editing_work_id = $work->id;
         $this->title = $work->title;
+        $this->url = $work->url;
         $this->description = $work->description;
         $this->skills = $work->skills->pluck('id')->toArray();
         $this->current_photo = $work->image->url;
@@ -56,6 +59,7 @@ class Work extends Component
             'description',
             'skills',
             'photo',
+            'url',
         ]);
     }
 
@@ -66,6 +70,7 @@ class Work extends Component
             'description' => $this->description,
             'skills' => $this->skills,
             'photo' => $this->photo,
+            'url' => $this->url,
         ];
     }
 
@@ -87,6 +92,7 @@ class Work extends Component
             $work->update([
                 'title' => $this->title,
                 'description' => $this->description,
+                'url' => $this->url,
                 'user_id' => Auth::user()->id
             ]);
 
@@ -119,7 +125,8 @@ class Work extends Component
             $work = WorkModel::create([
                 'title' => $this->title,
                 'description' => $this->description,
-                'user_id' => Auth::user()->id
+                'user_id' => Auth::user()->id,
+                'url' => $this->url,
             ]);
 
             if ( ! empty($this->skills) ) {
@@ -165,7 +172,8 @@ class Work extends Component
             'id',
             'title',
             'description',
-            'user_id'
+            'user_id',
+            'url'
             )
         ->with([
             'skills:id,name,icon',

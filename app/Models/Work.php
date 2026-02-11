@@ -14,7 +14,8 @@ class Work extends Model
     protected $fillable = [
         'description',
         'title',
-        'user_id'
+        'user_id',
+        'url'
     ];
 
     public function skills(): BelongsToMany

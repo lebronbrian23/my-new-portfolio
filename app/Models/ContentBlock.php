@@ -4,9 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Tonysm\RichTextLaravel\Models\Traits\HasRichText;
 
 class ContentBlock extends Model
 {
+    use HasRichText;
+
+    protected $richTextAttributes = [
+        'description',
+    ];
 
     public const SECTIONS = [
         'welcome',

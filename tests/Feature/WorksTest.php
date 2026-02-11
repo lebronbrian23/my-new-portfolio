@@ -73,6 +73,7 @@ class WorksTest extends TestCase
             ->test(Work::class)
             ->set('title', 'Patasente')
             ->set('description', 'Financial Application for SMEs')
+            ->set('url', 'https://patasente.com')
             ->set('skills', [$php->id, $js->id])
             ->set('photo', $photo)
             ->call('save')
@@ -124,6 +125,7 @@ class WorksTest extends TestCase
             ->test(Work::class)
             ->set('title', 'Patasente')
             ->set('description', 'Financial Application for SMEs')
+            ->set('url', 'https://patasente.com')
             ->set('skills', [$php->id, $js->id])
             ->set('photo', $photo)
             ->call('save')
@@ -157,6 +159,7 @@ class WorksTest extends TestCase
         Livewire::test(Work::class)
             ->set('title', 'Patasente')
             ->set('description', 'Financial Application for SMEs')
+            ->set('url', 'https://patasente.com')
             ->set('skills', [$php->id, $js->id])
             ->call('save')
             ->assertForbidden();

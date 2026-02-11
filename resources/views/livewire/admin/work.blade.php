@@ -28,6 +28,7 @@
                         <th class="border border-gray-300 px-2 py-1">Title</th>
                         <th class="border border-gray-300 px-2 py-1">Description</th>
                         <th class="border border-gray-300 px-2 py-1">Skills</th>
+                        <th class="border border-gray-300 px-2 py-1">Project Url</th>
                         <th class="border border-gray-300 px-2 py-1" colspan="2">Actions</th>
                     </tr>
                 </thead>
@@ -48,6 +49,8 @@
                                     <span class="inline-block px-2 py-1 rounded-full mr-1 mb-1 space-x-1">{{ $skill->name }}<span>
                                 @endforeach
                             </td>
+                            <td class="border border-gray-300 px-2 py-1">{{ $work->url }}</td>
+
                             <td class="border border-gray-300 px-2 py-1">
                                 <flux:button
                                     wire:click="edit({{ $work->id }})"
@@ -101,6 +104,16 @@
                         id="description"
                     />
                     @error('description') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="mb-2">
+                    <flux:input
+                        label="Project URL"
+                        placeholder="Enter project URL here."
+                        wire:model="url"
+                        id="url"
+                    />
+                    @error('url') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 @if( $editing_work_id && $current_photo)

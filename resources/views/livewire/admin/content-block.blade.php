@@ -39,12 +39,14 @@
                         <tr class="hover:bg-gray-50 dark:hover:bg-neutral-800">
                             <td class="border border-gray-300 px-2 py-1">{{ $content_block->id }}</td>
                             <td class="border border-gray-300 px-2 py-1">
-                                @if( $content_block->image)
-                                    <img src="{{ asset('storage/'.$content_block->image->url) }}" alt="{{ $content_block->title }}" class="h-16 w-16 object-cover rounded">
+                                @if( $content_block->photo)
+                                    <img src="{{ asset('storage/'.$content_block->photo) }}" alt="{{ $content_block->title }}" class="h-16 w-16 object-cover rounded">
                                 @endif
                             </td>
                             <td class="border border-gray-300 px-2 py-1">{{ $content_block->title }}</td>
-                            <td class="border border-gray-300 px-2 py-1">{{ $content_block->description }}</td>
+                            <td class="border border-gray-300 px-2 py-1">
+                                <div class="max-w-xs truncate">{!! Str::limit(strip_tags($content_block->description), 50) !!}</div>
+                            </td>
                             <td class="border border-gray-300 px-2 py-1">{{ $content_block->content_block_section }}</td>
                             <td class="border border-gray-300 px-2 py-1">{{ $content_block->navigation_link_id }}</td>
                             <td class="border border-gray-300 px-2 py-1">
@@ -85,52 +87,74 @@
 
             <form wire:submit.prevent="save" action="">
 
-                <div class="mb-2">
-                    <flux:textarea type="text" label="Title" placeholder="Enter title here" wire:model="title"/>
+                <div class="mb-4">
+                    <flux:input
+                        type="text"
+                        label="Title"
+                        placeholder="Enter title here"
+                        wire:model="title"
+                    />
+                    @error('title') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="mb-2">
-                    <flux:textarea
-                        type="text"
-                        label="Description"
-                        placeholder="Enter description here."
-                        wire:model="description"
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="description">
+                        Description
+                    </label>
+                    <x-trix-input
                         id="description"
+                        name="description"
+                        wire:model.live="description"
+                        :value="$description"
                     />
+                    @error('description') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 @if( $editing_content_block_id && $current_photo)
-                    <div class="mb-2">
-                        <label class="block mb-1 font-medium" for="photo">Current Image</label>
-                        <div class="mt-2 h-24 w-24">
-                            <img src="{{ asset('storage/'.$current_photo) }}" style="width:30%;" alt="Current Photo" class="rounded w-1/2">
+                    <div class="mb-4">
+                        <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200">Current Image</label>
+                        <div class="mt-2">
+                            <img src="{{ asset('storage/'.$current_photo) }}" alt="Current Photo" class="rounded w-32 h-32 object-cover">
                         </div>
                     </div>
-                 @endif
+                @endif
 
-                <div class="mb-2">
-                    <label class="block mb-1 font-medium" for="photo">Image</label>
-                    <input type="file" wire:model="photo" id="photo" accept="image/png, image/jpeg, image/jpg" class=" p-2 border border-gray-300 rounded">
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="photo">
+                        Image {{ $editing_content_block_id ? '(Upload new to replace)' : '' }}
+                    </label>
+                    <input
+                        type="file"
+                        wire:model="photo"
+                        id="photo"
+                        accept="image/png, image/jpeg, image/jpg"
+                        class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500"
+                    >
                     @error('photo') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-                </div>
 
-                <div class="mb-4">
-
-                    @if($photo && $photo->isPreviewable() )
-                        <div class="mt-2 h-24 w-24">
-                            <p class="font-medium mb-1">Preview:</p>
-                            <img src="{{ $photo->temporaryUrl() }}" style="width:30%;" alt="Photo Preview" class="rounded w-1/2">
-                        </div>
-                    @endif
-                    <div wire:loading wire:target='photo'>
-                        <span class="text-green-500">Uploading ....</span>
+                    <div wire:loading wire:target='photo' class="mt-2">
+                        <span class="text-blue-500 text-sm">Uploading...</span>
                     </div>
                 </div>
 
+                @if($photo && method_exists($photo, 'temporaryUrl'))
+                    <div class="mb-4">
+                        <p class="font-medium mb-2 text-gray-700 dark:text-gray-200">Preview:</p>
+                        <img src="{{ $photo->temporaryUrl() }}" alt="Photo Preview" class="rounded w-32 h-32 object-cover">
+                    </div>
+                @endif
+
                 <div class="mb-4">
-                    <label class="block mb-1 font-medium" for="content_block_section">Section</label>
-                    <select wire:model="content_block_section" id="content_block_section" class="w-full p-2 border border-gray-300 rounded">
-                         @foreach ( \App\Models\ContentBlock::SECTIONS as $section )
+                    <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="content_block_section">
+                        Section
+                    </label>
+                    <select
+                        wire:model="content_block_section"
+                        id="content_block_section"
+                        class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Select a section</option>
+                        @foreach ( \App\Models\ContentBlock::SECTIONS as $section )
                             <option value="{{ $section }}">{{ ucfirst($section) }}</option>
                         @endforeach
                     </select>
@@ -140,9 +164,16 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block mb-1 font-medium" for="content_block_status">Status</label>
-                    <select wire:model="content_block_status" id="content_block_status" class="w-full p-2 border border-gray-300 rounded">
-                         @foreach ( \App\Models\ContentBlock::STATUSES as $status )
+                    <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="content_block_status">
+                        Status
+                    </label>
+                    <select
+                        wire:model="content_block_status"
+                        id="content_block_status"
+                        class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Select status</option>
+                        @foreach ( \App\Models\ContentBlock::STATUSES as $status )
                             <option value="{{ $status }}">{{ ucfirst($status) }}</option>
                         @endforeach
                     </select>
@@ -152,9 +183,16 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block mb-1 font-medium" for="navigation_link_id">Associated Navigation link</label>
-                    <select wire:model="navigation_link_id" id="navigation_link_id" class="w-full p-2 border border-gray-300 rounded">
-                         @foreach ( \App\Models\NavigationLink::all() as $link )
+                    <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="navigation_link_id">
+                        Associated Navigation Link
+                    </label>
+                    <select
+                        wire:model="navigation_link_id"
+                        id="navigation_link_id"
+                        class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Select a navigation link</option>
+                        @foreach ( \App\Models\NavigationLink::all() as $link )
                             <option value="{{ $link->id }}">{{ ucfirst($link->link_name) }}</option>
                         @endforeach
                     </select>
@@ -163,7 +201,7 @@
                     @enderror
                 </div>
 
-                <div class="flex justify-end gap-4">
+                <div class="flex justify-end gap-4 mt-6">
                     @if ($editing_content_block_id)
                         <flux:button type="button" color="red" wire:click="cancel_edit" variant="danger">
                             Cancel
