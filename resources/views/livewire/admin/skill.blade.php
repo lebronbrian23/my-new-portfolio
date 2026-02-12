@@ -37,7 +37,9 @@
                             <td class="border border-gray-300 px-2 py-1">{{ $skill->id }}</td>
                             <td class="border border-gray-300 px-2 py-1">{{ $skill->name }}</td>
                             <td class="border border-gray-300 px-2 py-1">{{ $skill->description }}</td>
-                            <td class="border border-gray-300 px-2 py-1">{{ $skill->icon }}</td>
+                            <td class="border border-gray-300 px-2 py-1">
+                                <i class="{{ $skill->icon }} fa-3x" aria-hidden="true"></i>
+                            </td>
                             <td class="border border-gray-300 px-2 py-1">
                                 <flux:button
                                     wire:click="edit({{ $skill->id }})"
@@ -94,8 +96,9 @@
                 </div>
 
                 <div class="mb-4">
-                    <flux:input type="text" label="Icon" placeholder="icon" wire:model="icon"/>
-                     @error('icon') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    <flux:input type="text" label="Font Awesome Icon" placeholder="fa fa-code" wire:model="icon"/>
+                    <i class="font-sm text-red-600">Add a font awesome icon code from the official font awesome website</i>
+                    @error('icon') <span class="text-red-400 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="flex justify-end gap-4">
@@ -117,3 +120,9 @@
     </div>
 
 </div>
+
+@once
+    @push('fontawesome')
+        <script src="https://kit.fontawesome.com/ca8a2a996a.js" crossorigin="anonymous"></script>
+    @endpush
+@endonce

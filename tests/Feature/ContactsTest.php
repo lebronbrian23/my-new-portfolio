@@ -21,7 +21,7 @@ class ContactsTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get('/admin/contacts');
+        $response = $this->actingAs($user)->get('/admin/contact');
 
         $response->assertStatus(200)
             ->assertViewIs('admin.contact');

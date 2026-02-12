@@ -38,7 +38,9 @@
                             <td class="border border-gray-300 px-2 py-1">{{ $contact->id }}</td>
                             <td class="border border-gray-300 px-2 py-1">{{ $contact->type }}</td>
                             <td class="border border-gray-300 px-2 py-1">{{ $contact->link }}</td>
-                            <td class="border border-gray-300 px-2 py-1">{{ $contact->icon }}</td>
+                            <td class="border border-gray-300 px-2 py-1">
+                                <i class="{{ $contact->icon }} fa-3x" aria-hidden="true"></i>
+                            </td>
                             <td class="border border-gray-300 px-2 py-1">
                                 <flux:badge size="sm" color="{{ $contact->status === 'active' ? 'green' : 'red' }}">{{ $contact->status === 'active' ? 'Active' : 'Inactive' }}</flux:badge>
                             </td>
@@ -99,7 +101,8 @@
 
 
                 <div class="mb-4">
-                    <flux:input type="text" label="Icon" placeholder="icon" wire:model="icon"/>
+                    <flux:input type="text" label="Font Awesome Icon" placeholder="fa fa-code" wire:model="icon"/>
+                    <i class="font-sm text-red-600">Add a font awesome icon code from the official font awesome website</i>
                 </div>
 
                 <div class="mb-4">
@@ -133,3 +136,8 @@
     </div>
 
 </div>
+@once
+    @push('fontawesome')
+        <script src="https://kit.fontawesome.com/ca8a2a996a.js" crossorigin="anonymous"></script>
+    @endpush
+@endonce

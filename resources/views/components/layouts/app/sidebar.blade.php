@@ -3,6 +3,7 @@
 <head>
     @include('partials.head')
     @stack('styles')
+    @stack('fontawesome')
 </head>
 <body class="min-h-screen bg-white dark:bg-zinc-800 flex flex-col">
 

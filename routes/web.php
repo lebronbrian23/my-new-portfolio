@@ -3,11 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
-use App\Livewire\Skill;
-use App\Livewire\Work;
-use App\Livewire\Contact;
-use App\Livewire\ContentBlock;
-use App\Livewire\NavigationLink;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,7 +13,7 @@ Route::view('/skills', 'skills')->name('skills');
 Route::view('/works', 'works')->name('works');
 Route::view('/navigation-links', 'navigation-links')->name('navigation-links');
 Route::view('/content-blocks', 'content-block')->name('content-blocks');
-Route::view('/contacts', 'contact')->name('contacts');
+Route::view('/contact', 'contact')->name('contacts');
 Route::view('/about', 'about')->name('about');
 
 
@@ -33,7 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/admin/works', 'admin.works')->name('admin.works');
     Route::view('/admin/navigation-links', 'admin.navigation-links')->name('admin.navigation-links');
     Route::view('/admin/content-blocks', 'admin.content-block')->name('admin.content-blocks');
-    Route::view('/admin/contacts', 'admin.contact')->name('admin.contacts');
+    Route::view('/admin/contact', 'admin.contact')->name('admin.contacts');
     Route::view('/admin/about', 'admin.about')->name('admin.about');
     Route::view('/admin/resume', 'admin.resume')->name('admin.resume');
 

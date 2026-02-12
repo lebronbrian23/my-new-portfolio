@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
+    <script src="https://kit.fontawesome.com/ca8a2a996a.js" crossorigin="anonymous"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -232,106 +233,17 @@
 
     <!-- Work Section -->
     <section id="work" class="py-20">
-        <livewire:guest-work-section>
+        <livewire:guest-work-section />
     </section>
 
     <!-- Skills Section -->
     <section id="skills" class="py-20 bg-primary text-cream">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <p class="text-accent font-medium tracking-wide text-sm uppercase mb-2">Technologies</p>
-                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">Skills & Tools</h2>
-                <p class="text-cream/70 max-w-2xl mx-auto">The skills, tools and technologies I use to build your products</p>
-                <div class="decorative-line w-24 mx-auto mt-6"></div>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-12">
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">🌐</div>
-                    <div class="font-medium">HTML</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">🎨</div>
-                    <div class="font-medium">CSS</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">⚡</div>
-                    <div class="font-medium">JavaScript</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">🗄️</div>
-                    <div class="font-medium">SQL</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">💚</div>
-                    <div class="font-medium">Vue.js</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">🐘</div>
-                    <div class="font-medium">PHP</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">📗</div>
-                    <div class="font-medium">Node.js</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">🔶</div>
-                    <div class="font-medium">Laravel</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">🐙</div>
-                    <div class="font-medium">GitHub</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">⚛️</div>
-                    <div class="font-medium">React.js</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">🔌</div>
-                    <div class="font-medium">RESTful API</div>
-                </div>
-                <div class="skill-badge bg-cream/10 backdrop-blur-sm p-6 rounded-2xl text-center border border-cream/20">
-                    <div class="text-4xl mb-3">☁️</div>
-                    <div class="font-medium">AWS</div>
-                </div>
-            </div>
-
-            <div class="bg-accent/10 backdrop-blur-sm rounded-2xl p-8 border border-accent/30 text-center">
-                <p class="text-lg">
-                    <span class="font-semibold text-accent">Currently improving my skills in:</span>
-                    <span class="text-cream/90">Machine Learning & Data Science</span>
-                </p>
-            </div>
-        </div>
+        <livewire:guest-skill-section />
     </section>
 
     <!-- Contact Section -->
     <section id="contact" class="py-20">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <p class="text-accent font-medium tracking-wide text-sm uppercase mb-2">Let's Connect</p>
-                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">Get in touch with me</h2>
-                <p class="text-primary/70 text-lg">I'm always open to new opportunities and challenges. My inbox is always open.</p>
-                <div class="decorative-line w-24 mx-auto mt-6"></div>
-            </div>
-
-            <div class="bg-sage/20 rounded-3xl p-12 border border-primary/10 text-center">
-                <div class="space-y-6">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-accent rounded-full">
-                        <svg class="w-8 h-8 text-cream" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-display font-bold mb-2">Email Me</h3>
-                        <a href="mailto:ssekalegga@gmail.com" class="text-xl text-accent hover:underline">ssekalegga@gmail.com</a>
-                    </div>
-                    <a href="mailto:ssekalegga@gmail.com" class="inline-block px-8 py-4 bg-primary text-cream font-medium rounded-full hover:bg-accent transition-all hover:shadow-lg mt-4">
-                        Send a Message
-                    </a>
-                </div>
-            </div>
-        </div>
+        <livewire:guest-contact-section />
     </section>
 
     <!-- Footer -->

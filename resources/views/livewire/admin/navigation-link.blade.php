@@ -16,10 +16,9 @@
 
     <h2 class="text-2xl font-semibold mb-4">{{ __($page_title) }}</h2>
 
-    <div class="flex flex-col lg:flex-row gap-4 items-start">
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-        <!-- Table Section - Responsive with horizontal scroll -->
-        <div class="w-full lg:basis-2/4 rounded-xl border border-neutral-200 dark:border-neutral-700 p-2 sm:p-4 overflow-x-auto">
+        <div class="md:col-span-2 rounded-xl border border-neutral-200 dark:border-neutral-700 p-4 overflow-x-auto">
 
             <table class="border-collapse border border-gray-400 w-full min-w-max">
                 <thead class="bg-gray-800 text-white">
@@ -78,7 +77,7 @@
         </div>
 
         <!-- Form Section - Responsive -->
-        <div class="w-full lg:basis-1/4 rounded-xl border border-neutral-200 dark:border-neutral-700 p-4">
+        <div class="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 p-4">
             <h3 class="text-lg sm:text-xl font-semibold mb-4">{{ __('Add / Edit Navigation Link') }}</h3>
 
             <form wire:submit.prevent="save" action="">
