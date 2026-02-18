@@ -24,6 +24,8 @@ class ContentBlock extends Component
     public ?string $content_block_section = null;
     public string $content_block_status = 'active';
     public ?int $navigation_link_id = null;
+    public ?int $years_of_experience = null;
+    public ?int $projects_completed = null;
 
     /**
      * Validation rules
@@ -37,6 +39,8 @@ class ContentBlock extends Component
             'content_block_section' => ['nullable', Rule::in(ContentBlockModel::SECTIONS)],
             'content_block_status' => ['required', Rule::in(ContentBlockModel::STATUSES)],
             'navigation_link_id' => 'nullable|integer',
+            'years_of_experience' => 'nullable|integer|min:0',
+            'projects_completed' => 'nullable|integer|min:0',
         ];
     }
 
@@ -61,6 +65,8 @@ class ContentBlock extends Component
                 'content_block_section' => $this->content_block_section,
                 'content_block_status' => $this->content_block_status,
                 'navigation_link_id' => $this->navigation_link_id,
+                'years_of_experience' => $this->years_of_experience,
+                'projects_completed' => $this->projects_completed,
             ];
 
             // Only update photo if a new file was uploaded
@@ -86,6 +92,8 @@ class ContentBlock extends Component
                 'content_block_section' => $this->content_block_section,
                 'content_block_status' => $this->content_block_status,
                 'navigation_link_id' => $this->navigation_link_id,
+                'years_of_experience' => $this->years_of_experience,
+                'projects_completed' => $this->projects_completed,
                 'user_id' => Auth::id(),
             ];
 
@@ -113,6 +121,8 @@ class ContentBlock extends Component
             'content_block_section',
             'content_block_status',
             'navigation_link_id',
+            'years_of_experience',
+            'projects_completed',
         ]);
 
         // Reset validation errors
@@ -133,6 +143,8 @@ class ContentBlock extends Component
 
         $this->editing_content_block_id = $content_block->id;
         $this->title = $content_block->title;
+        $this->years_of_experience = $content_block->years_of_experience;
+        $this->projects_completed = $content_block->projects_completed;
         $this->description = $content_block->description?->toTrixHtml() ?? '';
         $this->content_block_section = $content_block->content_block_section;
         $this->content_block_status = $content_block->content_block_status;
@@ -152,8 +164,7 @@ class ContentBlock extends Component
             \Storage::disk('public')->delete($content_block->photo);
         }
 
-        DB::table('rich_texts')->where('record_type', ContentBlockModel::class)
-            ->where('record_id', $content_block->id)
+        DB::table('rich_texts')->where('record_id', $content_block->id)
             ->delete();
 
         $content_block->delete();

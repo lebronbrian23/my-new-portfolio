@@ -22,6 +22,7 @@ class Work extends Component
     public $photo;
     public $url;
     public $current_photo;
+    public $is_api = false;
 
 
     protected $rules = [
@@ -29,7 +30,8 @@ class Work extends Component
         'description' => 'required|string',
         'skills' => 'nullable|array',
         'url' => 'nullable|url',
-        'photo' => 'nullable|image|max:1500|mimes:jpg,jpeg,png'
+        'photo' => 'nullable|image|max:1500|mimes:jpg,jpeg,png',
+        'is_api' => 'boolean',
     ];
 
     public function edit($id)
@@ -44,6 +46,7 @@ class Work extends Component
         $this->description = $work->description;
         $this->skills = $work->skills->pluck('id')->toArray();
         $this->current_photo = $work->image->url;
+        $this->is_api = $work->is_api;
     }
 
     public function cancel_edit()
@@ -59,21 +62,10 @@ class Work extends Component
             'description',
             'skills',
             'photo',
+            'is_api',
             'url',
         ]);
     }
-
-    protected function data(): array
-    {
-        return [
-            'title' => $this->title,
-            'description' => $this->description,
-            'skills' => $this->skills,
-            'photo' => $this->photo,
-            'url' => $this->url,
-        ];
-    }
-
 
     public function save()
     {
@@ -93,7 +85,7 @@ class Work extends Component
                 'title' => $this->title,
                 'description' => $this->description,
                 'url' => $this->url,
-                'user_id' => Auth::user()->id
+                'is_api' => $this->is_api,
             ]);
 
             if ( !empty($this->skills) ) {
@@ -126,6 +118,7 @@ class Work extends Component
                 'title' => $this->title,
                 'description' => $this->description,
                 'user_id' => Auth::user()->id,
+                'is_api' => $this->is_api,
                 'url' => $this->url,
             ]);
 
@@ -173,6 +166,7 @@ class Work extends Component
             'title',
             'description',
             'user_id',
+            'is_api',
             'url'
             )
         ->with([

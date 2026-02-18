@@ -27,6 +27,8 @@
                         <th class="border border-gray-300 px-2 py-1">Photo</th>
                         <th class="border border-gray-300 px-2 py-1">Title</th>
                         <th class="border border-gray-300 px-2 py-1">Description</th>
+                        <th class="border border-gray-300 px-2 py-1">Years of Experience</th>
+                        <th class="border border-gray-300 px-2 py-1">Projects Completed
                         <th class="border border-gray-300 px-2 py-1">Content Block Section</th>
                         <th class="border border-gray-300 px-2 py-1">Navigation link id</th>
                         <th class="border border-gray-300 px-2 py-1">Status</th>
@@ -47,6 +49,8 @@
                             <td class="border border-gray-300 px-2 py-1">
                                 <div class="max-w-xs truncate">{!! Str::limit(strip_tags($content_block->description), 50) !!}</div>
                             </td>
+                            <td class="border border-gray-300 px-2 py-1">{{ $content_block->years_of_experience }}</td>
+                            <td class="border border-gray-300 px-2 py-1">{{ $content_block->projects_completed }}</td>
                             <td class="border border-gray-300 px-2 py-1">{{ $content_block->content_block_section }}</td>
                             <td class="border border-gray-300 px-2 py-1">{{ $content_block->navigation_link_id }}</td>
                             <td class="border border-gray-300 px-2 py-1">
@@ -145,6 +149,25 @@
                 @endif
 
                 <div class="mb-4">
+                    <flux:input
+                        type="number"
+                        label="Years of Experience"
+                        placeholder="Enter years of experience"
+                        wire:model="years_of_experience"
+                    />
+                    @error('years_of_experience') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                </div>
+                <div class="mb-4">
+                    <flux:input
+                        type="number"
+                        label="Projects Completed"
+                        placeholder="Enter number of projects completed"
+                        wire:model="projects_completed"
+                    />
+                    @error('projects_completed') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="mb-4">
                     <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="content_block_section">
                         Section
                     </label>
@@ -192,7 +215,11 @@
                         class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Select a navigation link</option>
-                        @foreach ( \App\Models\NavigationLink::all() as $link )
+                        @foreach ( \App\Models\NavigationLink::select('id','link_name',)
+                                ->whereNotIn('link_name',['Content Blocks', 'Navigation Links'])
+                                ->where('link_status', 'active')
+                                ->orderBy('link_position','asc')
+                                ->get(); as $link )
                             <option value="{{ $link->id }}">{{ ucfirst($link->link_name) }}</option>
                         @endforeach
                     </select>

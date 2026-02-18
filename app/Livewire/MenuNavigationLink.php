@@ -25,7 +25,6 @@ class MenuNavigationLink extends Component
             'link_status',
             'user_id'
         )
-        ->latest()
         ->whereNotIn('link_name' ,[ 'Resume', 'Home' ,'About'])
         ->orderBy('link_position')
         ->get()

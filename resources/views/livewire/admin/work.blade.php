@@ -29,6 +29,7 @@
                         <th class="border border-gray-300 px-2 py-1">Description</th>
                         <th class="border border-gray-300 px-2 py-1">Skills</th>
                         <th class="border border-gray-300 px-2 py-1">Project Url</th>
+                        <th class="border border-gray-300 px-2 py-1">Is Api</th>
                         <th class="border border-gray-300 px-2 py-1" colspan="2">Actions</th>
                     </tr>
                 </thead>
@@ -50,6 +51,8 @@
                                 @endforeach
                             </td>
                             <td class="border border-gray-300 px-2 py-1">{{ $work->url }}</td>
+
+                            <td class="border border-gray-300 px-2 py-1">{{ $work->is_api ? 'Yes' : 'No' }}</td>
 
                             <td class="border border-gray-300 px-2 py-1">
                                 <flux:button
@@ -114,6 +117,11 @@
                         id="url"
                     />
                     @error('url') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="mb-2">
+                    <flux:checkbox label="Is this an API Project?" wire:model="is_api" id="is_api" />
+                    @error('is_api') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 @if( $editing_work_id && $current_photo)

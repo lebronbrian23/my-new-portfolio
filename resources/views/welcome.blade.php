@@ -142,16 +142,11 @@
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <a href="#home" class="text-2xl font-display font-bold text-primary hover:text-accent transition-colors">
-                    <span class="flex md:hidden">BS</span>
-                    <span class="hidden md:flex">Brian Ssekalegga </span>
+                    <span class="flex md:hidden">{{ env('PORTFOLIO_OWNER_NAME_INITIALS') }}</span>
+                    <span class="hidden md:flex">{{ env('PORTFOLIO_OWNER_NAME') }} </span>
                 </a>
                 <div class="hidden md:flex space-x-8">
-                    <a href="#home" class="nav-link text-sm font-medium text-primary hover:text-accent">Home</a>
-                    <a href="#about" class="nav-link text-sm font-medium text-primary hover:text-accent">About</a>
-                    <a href="#work" class="nav-link text-sm font-medium text-primary hover:text-accent">Works</a>
-                    <a href="#skills" class="nav-link text-sm font-medium text-primary hover:text-accent">Skills</a>
-                    <a href="#contact" class="nav-link text-sm font-medium text-primary hover:text-accent">Contact</a>
-                    <a href="/pdf/Resume-Ssekalegga-Brian.pdf" target="_blank" class="px-4 py-2 bg-primary text-cream text-sm font-medium rounded-full hover:bg-accent transition-colors">Resume</a>
+                     @livewire('guest-nav-links-section' , ['location' => 'header'])
                 </div>
                 <button id="mobile-menu-btn" class="md:hidden p-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,12 +158,7 @@
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="hidden md:hidden pt-4 pb-2">
                 <div class="flex flex-col space-y-3">
-                    <a href="#home" class="text-sm font-medium text-primary hover:text-accent transition-colors">Home</a>
-                    <a href="#about" class="text-sm font-medium text-primary hover:text-accent transition-colors">About</a>
-                    <a href="#work" class="text-sm font-medium text-primary hover:text-accent transition-colors">Works</a>
-                    <a href="#skills" class="text-sm font-medium text-primary hover:text-accent transition-colors">Skills</a>
-                    <a href="#contact" class="text-sm font-medium text-primary hover:text-accent transition-colors">Contact</a>
-                    <a href="/pdf/Resume-Ssekalegga-Brian.pdf" target="_blank" class="inline-block px-4 py-2 bg-primary text-cream text-sm font-medium rounded-full hover:bg-accent transition-colors text-center">Resume</a>
+                     @livewire('guest-nav-links-section' , ['location' => 'mobile'])
                 </div>
             </div>
         </div>
@@ -176,54 +166,7 @@
 
     <!-- Hero Section -->
     <section id="home" class="min-h-screen flex items-center pt-20">
-        <div class="max-w-7xl mx-auto px-6 py-20">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6 animate-fade-in">
-                    <div class="space-y-2">
-                        <p class="text-accent font-medium tracking-wide text-sm uppercase">Full Stack Developer</p>
-                        <h1 class="text-6xl md:text-7xl font-display font-bold leading-tight">
-                            Hi, I'm <br>
-                            <span class="gradient-text">Brian Ssekalegga</span>
-                        </h1>
-                    </div>
-                    <div class="space-y-4">
-                        <h2 class="text-3xl md:text-4xl font-display font-semibold text-primary/80">I build the web.</h2>
-                        <p class="text-lg text-primary/70 max-w-lg leading-relaxed">
-                            I'm a software developer specialized in building digital experiences. Aspiring Machine Learning developer with a passion for innovation.
-                        </p>
-                    </div>
-                    <div class="flex gap-4 pt-4">
-                        <a href="#contact" class="px-8 py-4 bg-primary text-cream font-medium rounded-full hover:bg-accent transition-all hover:shadow-lg">
-                            Get In Touch
-                        </a>
-                        <a href="#work" class="px-8 py-4 border-2 border-primary text-primary font-medium rounded-full hover:bg-primary hover:text-cream transition-all">
-                            View Work
-                        </a>
-                    </div>
-                </div>
-                <div class="hidden md:block animate-float">
-                    <div class="relative">
-                        <div class="absolute inset-0 bg-accent/20 rounded-full blur-3xl"></div>
-                        <div class="relative bg-sage/30 rounded-3xl p-8 backdrop-blur-sm border border-primary/10">
-                            <div class="grid grid-cols-2 gap-6">
-                                <div class="bg-cream p-6 rounded-2xl shadow-lg">
-                                    <div class="text-4xl font-display font-bold text-accent">8+</div>
-                                    <div class="text-sm text-primary/60 mt-1">Years Experience</div>
-                                </div>
-                                <div class="bg-cream p-6 rounded-2xl shadow-lg">
-                                    <div class="text-4xl font-display font-bold text-accent">50+</div>
-                                    <div class="text-sm text-primary/60 mt-1">Projects Built</div>
-                                </div>
-                                <div class="bg-cream p-6 rounded-2xl shadow-lg col-span-2">
-                                    <div class="text-4xl font-display font-bold text-accent">$250K</div>
-                                    <div class="text-sm text-primary/60 mt-1">Monthly Transaction Value</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <livewire:guest-home-section />
     </section>
 
     <!-- About Section -->
@@ -232,7 +175,7 @@
     </section>
 
     <!-- Work Section -->
-    <section id="work" class="py-20">
+    <section id="works" class="py-20">
         <livewire:guest-work-section />
     </section>
 
@@ -251,17 +194,12 @@
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                 <div class="flex flex-wrap justify-center gap-6">
-                    <a href="#home" class="hover:text-accent transition-colors">Home</a>
-                    <a href="#about" class="hover:text-accent transition-colors">About</a>
-                    <a href="#skills" class="hover:text-accent transition-colors">Skills</a>
-                    <a href="#work" class="hover:text-accent transition-colors">Works</a>
-                    <a href="#contact" class="hover:text-accent transition-colors">Contact</a>
-                    <a href="/pdf/Resume-Ssekalegga-Brian.pdf" target="_blank" class="hover:text-accent transition-colors">Resume</a>
+                    @livewire('guest-nav-links-section' , ['location' => 'footer'])
                 </div>
             </div>
             <div class="decorative-line my-8"></div>
             <div class="text-center text-cream/60 text-sm">
-                © {{ date('Y') }} All rights reserved | Designed & developed by  Ssekalegga Brian
+                © {{ date('Y') }} All rights reserved | Designed & developed by {{ env('APP_DEVELOPER_NAME') }}
             </div>
         </div>
     </footer>
@@ -273,14 +211,6 @@
 
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when clicking on a link
-        const mobileLinks = mobileMenu.querySelectorAll('a');
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
         });
 
         // Smooth scroll with offset for fixed nav

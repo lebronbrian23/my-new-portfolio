@@ -15,7 +15,8 @@ class Work extends Model
         'description',
         'title',
         'user_id',
-        'url'
+        'url',
+        'is_api'
     ];
 
     public function skills(): BelongsToMany

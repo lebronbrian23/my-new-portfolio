@@ -157,7 +157,6 @@ class NavigationLink extends Component
         ->with([
             'content_block',
         ])
-        ->latest()
         ->orderby('link_position')
         ->paginate(10);
 

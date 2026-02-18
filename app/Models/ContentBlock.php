@@ -15,7 +15,7 @@ class ContentBlock extends Model
     ];
 
     public const SECTIONS = [
-        'welcome',
+        'home',
         'about',
         'work',
         'skill',
@@ -28,7 +28,7 @@ class ContentBlock extends Model
         'inactive',
     ];
 
-    protected $fillable = ['title', 'description','photo', 'user_id','content_block_section','content_block_status','navigation_link_id'];
+    protected $fillable = ['title', 'description','photo', 'user_id','content_block_section','content_block_status','navigation_link_id','years_of_experience','projects_completed'];
 
 
     /**
