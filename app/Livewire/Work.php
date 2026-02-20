@@ -22,7 +22,7 @@ class Work extends Component
     public $photo;
     public $url;
     public $current_photo;
-    public $is_api = false;
+    public bool $is_api = false;
 
 
     protected $rules = [
@@ -45,7 +45,7 @@ class Work extends Component
         $this->url = $work->url;
         $this->description = $work->description;
         $this->skills = $work->skills->pluck('id')->toArray();
-        $this->current_photo = $work->image->url;
+        $this->current_photo = $work->image ? $work->image->url : null;
         $this->is_api = $work->is_api;
     }
 

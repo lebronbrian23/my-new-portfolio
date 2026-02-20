@@ -118,16 +118,15 @@
                     />
                     @error('url') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
-
                 <div class="mb-2">
-                    <flux:checkbox label="Is this an API Project?" wire:model="is_api" id="is_api" />
+                    <flux:checkbox label="Is this an API Project?" wire:model="is_api" id="is_api"  />
                     @error('is_api') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
 
                 @if( $editing_work_id && $current_photo)
                     <div class="mb-2">
                         <label class="block mb-1 font-medium" for="photo">Current Image</label>
-                        <div class="mt-2 h-24 w-24">
+                        <div class="mt-2 h-32 w-32">
                             <img src="{{ asset('storage/'.$current_photo) }}" style="width:30%;" alt="Current Photo" class="rounded w-1/2">
                         </div>
                     </div>
@@ -142,7 +141,7 @@
                 <div class="mb-4">
 
                     @if($photo && $photo->isPreviewable() )
-                        <div class="mt-2 h-24 w-24">
+                        <div class="mt-2 h-32 w-32">
                             <p class="font-medium mb-1">Preview:</p>
                             <img src="{{ $photo->temporaryUrl() }}" style="width:30%;" alt="Photo Preview" class="rounded w-1/2">
                         </div>

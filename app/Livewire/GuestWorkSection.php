@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Work as WorkModel;
+use App\Models\Contact as ContactModel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
@@ -20,7 +21,8 @@ class GuestWorkSection extends Component
             'id',
             'title',
             'description',
-            'url'
+            'url',
+            'is_api',
             )
         ->with([
             'skills:id,name,icon',
@@ -29,9 +31,12 @@ class GuestWorkSection extends Component
         ->latest()
         ->paginate(10);
 
+        $github_link = ContactModel::where('type', 'github')->first();
+
         return view('livewire.guest.guest-work-section', [
             'page_title' => 'Some of the things I\'ve built.',
             'work_content' => $work_content,
+            'github_link' => $github_link,
         ]);
 
     }
