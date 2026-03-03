@@ -1,4 +1,4 @@
-name: Deploy to AWS EC2
+name: Deploy to AWS EC2 instance
 
 on:
   push:
@@ -21,7 +21,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/myapp
-
 
             # Pull the latest code
             git pull origin main
