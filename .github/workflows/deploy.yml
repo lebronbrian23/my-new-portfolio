@@ -26,7 +26,7 @@ jobs:
             git pull origin main
 
             # write .env file from secrets
-            echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+            echo "${{ secrets.PROD_ENV_FILE }}" > .env
 
             # Build and restart with prod compose
             docker-compose -f compose.prod.yaml down
