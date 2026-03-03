@@ -15,7 +15,7 @@ class GuestHomeSection extends Component
         $welcome_content = ContentBlockModel::where('content_block_section', 'home')->first();
 
         return view('livewire.guest.guest-home-section', [
-            'page_title' => $welcome_content->title,
+            'page_title' => $welcome_content->title ?? 'Welcome to My Portfolio',
             'home_content' => $welcome_content,
         ]);
     }
