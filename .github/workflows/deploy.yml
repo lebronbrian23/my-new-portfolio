@@ -29,9 +29,9 @@ jobs:
             echo "${{ secrets.PROD_ENV_FILE }}" > .env
 
             # Fix any unqouted variables with spaces in .env
-            sed -i 's/APP_NAME=/APP_NAME="/; s/"$/"/' .env
-            sed -i 's/APP_DEVELOPER_NAME=/APP_DEVELOPER_NAME="/; s/"$/"/' .env
-            sed -i 's/PORTFOLIO_OWNER_NAME=/PORTFOLIO_OWNER_NAME="/; s/"$/"/' .env
+            sed -i 's/^APP_NAME=\(.*[[:space:]].*\)$/APP_NAME="\1"/' .env
+            sed -i 's/^APP_DEVELOPER_NAME=\(.*[[:space:]].*\)$/APP_DEVELOPER_NAME="\1"/' .env
+            sed -i 's/^PORTFOLIO_OWNER_NAME=\(.*[[:space:]].*\)$/PORTFOLIO_OWNER_NAME="\1"/' .env
 
             # Build and restart with prod compose
             docker compose -f compose.prod.yaml down -v
