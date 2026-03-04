@@ -16,8 +16,18 @@ class NavigationLinkTableSeeder extends Seeder
         \App\Models\NavigationLink::create([
             'link_name' => 'Home',
             'link_route' => '/',
-            'link_icon' => 'home',
+            'link_icon' => 'bolt',
             'link_position' => 1,
+            'link_location' => 'header',
+            'user_id' => User::first()->id ?? 1,
+            'shows_on_frontend' => true
+        ]);
+
+        \App\Models\NavigationLink::create([
+            'link_name' => 'Navigation Links',
+            'link_route' => '/navigation-links',
+            'link_icon' => 'bolt',
+            'link_position' => 2,
             'link_location' => 'header',
             'user_id' => User::first()->id ?? 1,
             'shows_on_frontend' => true
