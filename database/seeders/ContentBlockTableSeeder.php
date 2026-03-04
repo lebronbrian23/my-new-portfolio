@@ -18,6 +18,7 @@ class ContentBlockTableSeeder extends Seeder
             'title' => 'Welcome to My Portfolio',
             'description' => 'I am a passionate software developer with a knack for creating innovative solutions. With a strong background in web development, I specialize in building dynamic and responsive applications that deliver exceptional user experiences. Explore my projects and skills to see how I can contribute to your next venture.',
             'user_id' => \App\Models\User::first()->id ?? 1,
+            'navigation_link_id' => \App\Models\NavigationLink::where('link_route', '/')->first()->id ?? 1
         ]);
     }
 }
