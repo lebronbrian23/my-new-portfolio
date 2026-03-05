@@ -25,12 +25,12 @@ class NavigationLinkTableSeeder extends Seeder
 
         \App\Models\NavigationLink::create([
             'link_name' => 'Navigation Links',
-            'link_route' => '/navigation-links',
+            'link_route' => 'navigation-links',
             'link_icon' => 'bolt',
             'link_position' => 2,
             'link_location' => 'header',
             'user_id' => User::first()->id ?? 1,
-            'shows_on_frontend' => false
+            'shows_on_frontend' => true
         ]);
 
         \App\Models\NavigationLink::create([
@@ -40,7 +40,7 @@ class NavigationLinkTableSeeder extends Seeder
             'link_position' => 3,
             'link_location' => 'header',
             'user_id' => User::first()->id ?? 1,
-            'shows_on_frontend' => false
+            'shows_on_frontend' => true
         ]);
 
     }
