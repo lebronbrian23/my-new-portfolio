@@ -41,7 +41,6 @@ jobs:
 
             # laravel post-deploy commands
             docker compose -f compose.prod.yaml exec -T app php artisan migrate --force
-            docker compose -f compose.prod.yaml exec -T app php artisan db:seed --force
             docker compose -f compose.prod.yaml exec -T app php artisan storage:link
             docker compose -f compose.prod.yaml exec -T app php artisan config:cache
             docker compose -f compose.prod.yaml exec -T app php artisan route:cache
