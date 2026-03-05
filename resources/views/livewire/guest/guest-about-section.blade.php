@@ -7,7 +7,7 @@
                     <h2 class="text-4xl md:text-5xl font-display font-bold mb-6">{{ $about_content->title ?? 'About Me' }}</h2>
                 </div>
 
-                <div class="">{!! $about_content->description ?? 'Learn more about me and my journey.' !!}</div>
+                <div class="">{!! $about_content->description ?? 'Coming soon.' !!}</div>
 
             </div>
         </div>
