@@ -186,13 +186,13 @@
                         @endif
                     </div>
                 @endif
-                
+
                 @if($content_block_section === 'home')
                     <div class="mb-4">
                         <flux:input
                             type="number"
-                            label="Years of Experience"
-                            placeholder="Enter years of experience"
+                            label="Years of Experience."
+                            placeholder="Enter years of experience."
                             wire:model="years_of_experience"
                         />
                         @error('years_of_experience') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
@@ -200,8 +200,8 @@
                     <div class="mb-4">
                         <flux:input
                             type="number"
-                            label="Projects Completed"
-                            placeholder="Enter number of projects completed"
+                            label="Projects Completed."
+                            placeholder="Enter number of projects completed."
                             wire:model="projects_completed"
                         />
                         @error('projects_completed') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
