@@ -24,7 +24,7 @@
                 <thead class="bg-gray-800 text-white">
                     <tr>
                         <th class="border border-gray-300 px-2 py-1">#</th>
-                        <th class="border border-gray-300 px-2 py-1">Photo</th>
+                        <th class="border border-gray-300 px-2 py-1">File / Image</th>
                         <th class="border border-gray-300 px-2 py-1">Title</th>
                         <th class="border border-gray-300 px-2 py-1">Description</th>
                         <th class="border border-gray-300 px-2 py-1">Years of Experience</th>
@@ -42,7 +42,11 @@
                             <td class="border border-gray-300 px-2 py-1">{{ $content_block->id }}</td>
                             <td class="border border-gray-300 px-2 py-1">
                                 @if( $content_block->photo)
-                                    <img src="{{ asset('storage/'.$content_block->photo) }}" alt="{{ $content_block->title }}" class="h-16 w-16 object-cover rounded">
+                                    @if($content_block->content_block_section === 'resume')
+                                        <a href="{{ asset('storage/'.$content_block->photo) }}" target="_blank" class="text-blue-600 underline">PDF</a>
+                                    @else
+                                        <img src="{{ asset('storage/'.$content_block->photo) }}" alt="{{ $content_block->title }}" class="h-16 w-16 object-cover rounded">
+                                    @endif
                                 @endif
                             </td>
                             <td class="border border-gray-300 px-2 py-1">{{ $content_block->title }}</td>
@@ -114,65 +118,13 @@
                     @error('description') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                @if( $editing_content_block_id && $current_photo)
-                    <div class="mb-4">
-                        <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200">Current Image</label>
-                        <div class="mt-2">
-                            <img src="{{ asset('storage/'.$current_photo) }}" alt="Current Photo" class="rounded w-32 h-32 object-cover">
-                        </div>
-                    </div>
-                @endif
-
-                <div class="mb-4">
-                    <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="photo">
-                        Image {{ $editing_content_block_id ? '(Upload new to replace)' : '' }}
-                    </label>
-                    <input
-                        type="file"
-                        wire:model="photo"
-                        id="photo"
-                        accept="image/png, image/jpeg, image/jpg"
-                        class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500"
-                    >
-                    @error('photo') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-
-                    <div wire:loading wire:target='photo' class="mt-2">
-                        <span class="text-blue-500 text-sm">Uploading...</span>
-                    </div>
-                </div>
-
-                @if($photo && method_exists($photo, 'temporaryUrl'))
-                    <div class="mb-4">
-                        <p class="font-medium mb-2 text-gray-700 dark:text-gray-200">Preview:</p>
-                        <img src="{{ $photo->temporaryUrl() }}" alt="Photo Preview" class="rounded w-32 h-32 object-cover">
-                    </div>
-                @endif
-
-                <div class="mb-4">
-                    <flux:input
-                        type="number"
-                        label="Years of Experience"
-                        placeholder="Enter years of experience"
-                        wire:model="years_of_experience"
-                    />
-                    @error('years_of_experience') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-                <div class="mb-4">
-                    <flux:input
-                        type="number"
-                        label="Projects Completed"
-                        placeholder="Enter number of projects completed"
-                        wire:model="projects_completed"
-                    />
-                    @error('projects_completed') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-
                 <div class="mb-4">
                     <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="content_block_section">
                         Section
                     </label>
                     <select
                         wire:model="content_block_section"
+                        wire:change="$refresh"
                         id="content_block_section"
                         class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded focus:ring-2 focus:ring-blue-500"
                     >
@@ -185,6 +137,77 @@
                         <span class="text-red-600 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
+
+                @if( $editing_content_block_id && $current_photo)
+                    <div class="mb-4">
+                        <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200">
+                            Current @if($content_block_section === 'resume') file @else image @endif
+                        </label>
+                        <div class="mt-2">
+                            @if($content_block_section === 'resume')
+                                <a href="{{ asset('storage/'.$current_photo) }}" target="_blank" class="text-blue-600 underline">Download PDF</a>
+                            @else
+                                <img src="{{ asset('storage/'.$current_photo) }}" alt="Current Photo" class="rounded w-32 h-32 object-cover">
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="photo">
+                        @if($content_block_section === 'resume')
+                            File
+                        @else
+                            Image
+                        @endif
+                        {{ $editing_content_block_id ? '(Upload new to replace)' : '' }}
+                    </label>
+                    <input
+                        type="file"
+                        wire:model="photo"
+                        id="photo"
+                        accept="@if($content_block_section === 'resume') application/pdf @else image/png, image/jpeg, image/jpg @endif"
+                        class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500"
+                    >
+                    @error('photo') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+
+                    <div wire:loading wire:target='photo' class="mt-2">
+                        <span class="text-blue-500 text-sm">Uploading...</span>
+                    </div>
+                </div>
+
+                @if($photo && method_exists($photo, 'temporaryUrl'))
+                    <div class="mb-4">
+                        <p class="font-medium mb-2 text-gray-700 dark:text-gray-200">Preview:</p>
+                        @if($content_block_section === 'resume')
+                            <a href="{{ $photo->temporaryUrl() }}" target="_blank" class="text-blue-600 underline">Open PDF</a>
+                        @else
+                            <img src="{{ $photo->temporaryUrl() }}" alt="Photo Preview" class="rounded w-32 h-32 object-cover">
+                        @endif
+                    </div>
+                @endif
+                
+                @if($content_block_section === 'home')
+                    <div class="mb-4">
+                        <flux:input
+                            type="number"
+                            label="Years of Experience"
+                            placeholder="Enter years of experience"
+                            wire:model="years_of_experience"
+                        />
+                        @error('years_of_experience') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="mb-4">
+                        <flux:input
+                            type="number"
+                            label="Projects Completed"
+                            placeholder="Enter number of projects completed"
+                            wire:model="projects_completed"
+                        />
+                        @error('projects_completed') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    </div>
+                @endif
+
 
                 <div class="mb-4">
                     <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="content_block_status">

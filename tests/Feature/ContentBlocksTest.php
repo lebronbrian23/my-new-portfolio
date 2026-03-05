@@ -132,6 +132,64 @@ class ContentBlocksTest extends TestCase
             ->assertHasErrors(['title', 'description']);
     }
 
+    public function test_resume_section_accepts_pdf_file()
+    {
+        $user = User::factory()->create();
+
+        $link = NavigationLink::create([
+            'link_name' => "Resume",
+            'link_route' => "/resume",
+            'link_position' => 5,
+            'user_id' => $user->id
+        ]);
+
+        Storage::fake('public');
+        $pdf = UploadedFile::fake()->create('resume.pdf', 100, 'application/pdf');
+
+        Livewire::actingAs($user)
+            ->test(ContentBlock::class)
+            ->set('title', 'My Resume')
+            ->set('description', 'Resume attached')
+            ->set('photo', $pdf)
+            ->set('content_block_section', 'resume')
+            ->set('content_block_status', 'active')
+            ->set('navigation_link_id', $link->id)
+            ->set('years_of_experience', 0)
+            ->set('projects_completed', 0)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $cb = ContentBlockModel::first();
+        $this->assertNotNull($cb);
+        Storage::disk('public')->assertExists($cb->photo);
+        $this->assertStringEndsWith('.pdf', $cb->photo);
+    }
+
+    public function test_resume_section_rejects_non_pdf()
+    {
+        $user = User::factory()->create();
+        $link = NavigationLink::create([
+            'link_name' => "Resume",
+            'link_route' => "/resume",
+            'link_position' => 5,
+            'user_id' => $user->id
+        ]);
+
+        Storage::fake('public');
+        $photo = UploadedFile::fake()->image('notresume.jpg');
+
+        Livewire::actingAs($user)
+            ->test(ContentBlock::class)
+            ->set('title', 'My Resume')
+            ->set('description', 'Not a pdf')
+            ->set('photo', $photo)
+            ->set('content_block_section', 'resume')
+            ->set('content_block_status', 'active')
+            ->set('navigation_link_id', $link->id)
+            ->call('save')
+            ->assertHasErrors(['photo']);
+    }
+
     public function test_authenticated_user_can_update_content_block_info()
     {
         $user = User::factory()->create();
@@ -216,7 +274,7 @@ class ContentBlocksTest extends TestCase
         $content_block = ContentBlockModel::create([
             'title' => 'About Me',
             'description' => 'My bio',
-            'photo' => $originalPhoto->store('content_block_photos', 'public'),
+            'photo' => $originalPhoto->store('content_block_files', 'public'),
             'user_id' => $user->id,
             'content_block_section' => 'about',
             'content_block_status' => 'active',

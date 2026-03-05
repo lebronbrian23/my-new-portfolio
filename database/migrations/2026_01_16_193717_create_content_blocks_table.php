@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('years_of_experience')->default(0);
             $table->integer('projects_completed')->default(0);
             $table->string('photo')->nullable();
-            $table->enum('content_block_section',['home','about','work','skill','contact'])->nullable();
+            $table->enum('content_block_section',['home','about','work','skill','contact','resume'])->nullable();
             $table->enum('content_block_status',['active','inactive'])->default('active');
             $table->foreignId('user_id')->constrained();
             $table->foreignId('navigation_link_id')->constrained()->cascadeOnDelete();

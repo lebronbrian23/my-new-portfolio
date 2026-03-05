@@ -1,84 +1,138 @@
-# my-portfolio
+# My Portfolio
 
-A Laravel 12 + Livewire (Volt) starter-based personal portfolio site using Laravel Fortify for authentication and Vite + Tailwind for frontend tooling.
+This repository powers my personal portfolio website. It is built on top of a Laravel 12 starter kit enhanced with Livewire (Volt) components and Laravel Fortify for authentication.
 
-## Quick Start
+The site enables the owner to manage and display:
 
-1. Clone
-   git clone <repo-url> my-portfolio
-2. Enter directory
+- **Skills** – list of technical proficiencies with logos and descriptions
+- **Works** – projects or pieces of work including title, image, link, and category
+- **Navigation links** – items used in the site menu (customizable order and labels)
+- **Content blocks** – arbitrary text and markup sections for the home page or other areas (resume blocks allow uploading a PDF instead of an image)
+- **Contact form** – visitors can send messages, which are stored and can be moderated by the authenticated user
+
+All administration pages are powered by Livewire components under `app/Livewire` and protected by Fortify authentication. Volt provides user settings (profile, password, appearance, two–factor). The public-facing frontend is styled with Tailwind CSS and built with Vite.
+
+---
+
+## Getting Started
+
+To run the portfolio locally:
+
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/lebronbrian23/my-new-portfolio.git
    cd my-portfolio
-3. Install PHP dependencies
+   ```
+2. **Install PHP dependencies**
+   ```bash
    composer install
-4. Install JS dependencies
+   ```
+3. **Install JavaScript dependencies**
+   ```bash
    npm install
-5. Copy environment file
+   ```
+4. **Copy and configure environment**
+   ```bash
    cp .env.example .env
-6. Generate app key
    php artisan key:generate
-7. Configure your database in .env then run migrations
+   ```
+   Update database settings (and mail if required) in `.env`.
+5. **Migrate database**
+   ```bash
    php artisan migrate
-8. Start development
+   ```
+6. **Run development server**
+   ```bash
    npm run dev
-   or build for production:
-   npm run build
+   php artisan serve
+   ```
+   or build for production with `npm run build`.
 
-## Requirements
+### Requirements
 
-- Docker
-- PHP ^8.2
+- PHP >= 8.2 with required extensions
 - Composer
-- Node.js + npm
-- Supported DB (configured in .env)
+- Node.js & npm
+- A supported database (MySQL, Postgres, SQLite, etc.)
+- Docker is optional but recommended for local environment parity
 
-## Useful Scripts
+### Useful Commands
 
-- composer run setup — runs installer, generates key, migrates, installs npm deps and builds assets
-- composer run dev — runs server, queue listener, pail, and vite via concurrently
-- composer run test — runs test suite
-- npm run dev / npm run build — Vite dev/build
+| Command | Description |
+|---------|-------------|
+| `composer run setup` | Installer script: composer install, npm install, migrate, build assets, etc. |
+| `composer run dev` | Starts PHP server, queue worker and Vite in parallel |
+| `composer run test` | Runs the PHPUnit test suite |
+| `npm run dev` / `npm run build` | Vite development server or build assets |
+
+---
 
 ## Project Structure
 
-- app/ — Laravel app code (Livewire components in app/Livewire)
-- routes/web.php — route definitions (public pages plus Volt settings)
-- resources/js, resources/css — frontend assets (Vite + Tailwind)
-- database/migrations — migrations; factories and seeders available
-- public/ — built assets and entry point
+- `app/` – application code; Livewire components live in `app/Livewire`
+- `routes/web.php` – route definitions (public pages and Volt settings)
+- `resources/js`, `resources/css` – frontend entry points for Vite/Tailwind
+- `database/migrations`, `factories`, `seeders` – schema and test data
+- `public/` – compiled assets and entry point
 
-Public routes include:
-- / — welcome/home
-- /skills, /works, /navigation-links, /content-block, /contact
+Public pages include:
+- `/` – homepage rendering content blocks, skills, works, etc.
+- `/skills`, `/works`, `/navigation-links`, `/content-block`, `/contact` – API endpoints used by the Livewire admin UI and occasionally publicly
 
-Volt provides settings routes for user profile, password, appearance, and two-factor.
+Volt provides user settings routes for profile, password, appearance, and two-factor authentication.
+
+---
 
 ## Authentication
 
-- Uses Laravel Fortify for auth features and two-factor support.
-- Volt routes handle settings pages (profile, password, appearance, two-factor).
+Administration is protected using Laravel Fortify. Users may register, log in, and manage their account through Volt's UI. Two-factor authentication is supported.
+
+---
 
 ## Testing
 
-Run the project's tests:
+Execute the test suite before merging changes:
+```bash
 composer run test
+```
+
+---
 
 ## Deployment
 
-1. Build assets:
+1. Build frontend assets:
+   ```bash
    npm run build
-2. Push migrations:
+   ```
+2. Run migrations on the production database:
+   ```bash
    php artisan migrate --force
-3. Cache/optimize:
+   ```
+3. Cache configuration and routes:
+   ```bash
    php artisan config:cache
    php artisan route:cache
    php artisan view:cache
+   ```
+4. Restart queue workers and web server as needed.
+
+---
 
 ## Contributing
 
-- Follow existing code style.
-- Run tests locally and include tests for new features.
-- Open PRs against main with a descriptive title.
+Contributions are welcome! Please:
+
+1. Fork the repository and create a feature branch
+2. Follow the existing coding style (PSR-12, Tailwind classes, etc.)
+3. Add or update tests for your changes
+4. Submit a pull request with a clear description
+
+---
 
 ## License
 
-MIT (see composer.json)
+This project is licensed under the MIT License – see `composer.json` for details.
+
+---
+
+*Last updated March 2026*

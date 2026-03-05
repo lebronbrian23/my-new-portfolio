@@ -27,21 +27,47 @@ class ContentBlock extends Component
     public ?int $years_of_experience = null;
     public ?int $projects_completed = null;
 
+    // helper to determine if we're dealing with a resume block
+    public function getIsResumeProperty(): bool
+    {
+        return $this->content_block_section === 'resume';
+    }
+
+    /**
+     * Generate custom filename for resume PDF
+     */
+    private function generateResumeFilename(): string
+    {
+        $portfolio_owner_name = env('PORTFOLIO_OWNER_NAME') ?? 'my portfolio';
+        $name = strtolower(str_replace(' ', '-', $portfolio_owner_name ));
+        $date = now()->format('Ymd');
+
+        return "{$name}-resume-{$date}.pdf";
+    }
+
     /**
      * Validation rules
      */
     protected function rules(): array
     {
-        return [
+        $rules = [
             'title' => 'required|string',
             'description' => 'required|string',
-            'photo' => 'nullable|image|max:1500|mimes:jpg,jpeg,png',
             'content_block_section' => ['nullable', Rule::in(ContentBlockModel::SECTIONS)],
             'content_block_status' => ['required', Rule::in(ContentBlockModel::STATUSES)],
             'navigation_link_id' => 'nullable|integer',
             'years_of_experience' => 'nullable|integer|min:0',
             'projects_completed' => 'nullable|integer|min:0',
         ];
+
+        // photo/file validation differs for resume section
+        if ($this->getIsResumeProperty()) {
+            $rules['photo'] = 'nullable|file|mimetypes:application/pdf|max:5120'; // 5MB
+        } else {
+            $rules['photo'] = 'nullable|image|max:1500|mimes:jpg,jpeg,png';
+        }
+
+        return $rules;
     }
 
     public function save()
@@ -69,13 +95,18 @@ class ContentBlock extends Component
                 'projects_completed' => $this->projects_completed,
             ];
 
-            // Only update photo if a new file was uploaded
+            // Only update photo/file if a new upload was provided
             if ($this->photo instanceof TemporaryUploadedFile) {
-                // Delete old photo if exists
+                // Delete old file if exists
                 if ($content_block->photo) {
                     \Storage::disk('public')->delete($content_block->photo);
                 }
-                $updateData['photo'] = $this->photo->store('content_block_photos', 'public');
+                if ($this->getIsResumeProperty()) {
+                    $filename = $this->generateResumeFilename();
+                    $updateData['photo'] = $this->photo->storeAs('content_block_files', $filename, 'public');
+                } else {
+                    $updateData['photo'] = $this->photo->store('content_block_files', 'public');
+                }
             }
 
             $content_block->update($updateData);
@@ -97,9 +128,14 @@ class ContentBlock extends Component
                 'user_id' => Auth::id(),
             ];
 
-            // Only add photo if uploaded
+            // Only add photo/file if uploaded
             if ($this->photo instanceof TemporaryUploadedFile) {
-                $createData['photo'] = $this->photo->store('content_block_photos', 'public');
+                if ($this->getIsResumeProperty()) {
+                    $filename = $this->generateResumeFilename();
+                    $createData['photo'] = $this->photo->storeAs('content_block_files', $filename, 'public');
+                } else {
+                    $createData['photo'] = $this->photo->store('content_block_files', 'public');
+                }
             }
 
             ContentBlockModel::create($createData);
@@ -177,9 +213,15 @@ class ContentBlock extends Component
      */
     public function updatedPhoto()
     {
-        $this->validate([
-            'photo' => 'nullable|image|max:1500|mimes:jpg,jpeg,png',
-        ]);
+        if ($this->getIsResumeProperty()) {
+            $this->validate([
+                'photo' => 'nullable|file|mimetypes:application/pdf|max:5120',
+            ]);
+        } else {
+            $this->validate([
+                'photo' => 'nullable|image|max:1500|mimes:jpg,jpeg,png',
+            ]);
+        }
     }
 
     public function render()

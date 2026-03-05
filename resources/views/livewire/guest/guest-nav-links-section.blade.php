@@ -31,13 +31,25 @@
     <div class="hidden md:flex space-x-8">
         @foreach($links as $link)
             @if($link->link_name === 'Resume')
-                <a
-                    href="{{ $link->link_route }}"
-                    target="_blank"
-                    class="px-4 py-2 bg-primary text-cream text-sm font-medium rounded-full hover:bg-accent transition-colors"
-                >
-                    {{ $link->link_name }}
-                </a>
+                @php
+                    $resumeBlock = \App\Models\ContentBlock::where('content_block_section', 'resume')
+                        ->where('content_block_status', 'active')
+                        ->first();
+                    $resumeUrl = $resumeBlock && $resumeBlock->photo ? asset('storage/' . $resumeBlock->photo) : null;
+                @endphp
+                @if($resumeUrl)
+                    <a
+                        href="{{ $resumeUrl }}"
+                        download
+                        class="px-4 py-2 bg-primary text-cream text-sm font-medium rounded-full hover:bg-accent transition-colors"
+                    >
+                        {{ $link->link_name }}
+                    </a>
+                @else
+                    <span class="px-4 py-2 bg-gray-400 text-cream text-sm font-medium rounded-full cursor-not-allowed">
+                        {{ $link->link_name }}
+                    </span>
+                @endif
             @else
                 <a
                     href="#{{ $link->link_route }}"
@@ -55,13 +67,25 @@
     <div class="flex flex-col space-y-3">
         @foreach($links as $link)
             @if($link->link_name === 'Resume')
-                <a
-                    href="{{ $link->link_route }}"
-                    target="_blank"
-                    class="inline-block px-4 py-2 bg-primary text-cream text-sm font-medium rounded-full hover:bg-accent transition-colors text-center"
-                >
-                    {{ $link->link_name }}
-                </a>
+                @php
+                    $resumeBlock = \App\Models\ContentBlock::where('content_block_section', 'resume')
+                        ->where('content_block_status', 'active')
+                        ->first();
+                    $resumeUrl = $resumeBlock && $resumeBlock->photo ? asset('storage/' . $resumeBlock->photo) : null;
+                @endphp
+                @if($resumeUrl)
+                    <a
+                        href="{{ $resumeUrl }}"
+                        download
+                        class="inline-block px-4 py-2 bg-primary text-cream text-sm font-medium rounded-full hover:bg-accent transition-colors text-center"
+                    >
+                        {{ $link->link_name }}
+                    </a>
+                @else
+                    <span class="inline-block px-4 py-2 bg-gray-400 text-cream text-sm font-medium rounded-full text-center cursor-not-allowed">
+                        {{ $link->link_name }}
+                    </span>
+                @endif
             @else
                 <a
                     href="#{{ $link->link_route }}"
@@ -79,18 +103,35 @@
     {{-- Footer Navigation --}}
     <div class="flex flex-wrap justify-center gap-6">
         @foreach($links as $link)
-            <a
-                @if($link->link_name === 'Resume')
-                    href="{{ $link->link_route }}"
-                    target="_blank"
+            @if($link->link_name === 'Resume')
+                @php
+                    $resumeBlock = \App\Models\ContentBlock::where('content_block_section', 'resume')
+                        ->where('content_block_status', 'active')
+                        ->first();
+                    $resumeUrl = $resumeBlock && $resumeBlock->photo ? asset('storage/' . $resumeBlock->photo) : null;
+                @endphp
+                @if($resumeUrl)
+                    <a
+                        href="{{ $resumeUrl }}"
+                        download
+                        class="hover:text-accent transition-colors"
+                    >
+                        {{ $link->link_name }}
+                    </a>
                 @else
-                    href="#{{ $link->link_route }}"
+                    <span class="text-gray-400 cursor-not-allowed">
+                        {{ $link->link_name }}
+                    </span>
                 @endif
-                class="hover:text-accent transition-colors"
-                :class="{ 'text-red-600 font-bold': activeSection === '{{ $link->link_route }}' && '{{ $link->link_name }}' !== 'Resume' }"
-            >
-                {{ $link->link_name }}
-            </a>
+            @else
+                <a
+                    href="#{{ $link->link_route }}"
+                    class="hover:text-accent transition-colors"
+                    :class="{ 'text-red-600 font-bold': activeSection === '{{ $link->link_route }}' }"
+                >
+                    {{ $link->link_name }}
+                </a>
+            @endif
         @endforeach
     </div>
 
