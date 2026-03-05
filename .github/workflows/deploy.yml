@@ -33,6 +33,8 @@ jobs:
             sed -i 's/^APP_BACKEND_NAME=.*/APP_BACKEND_NAME="Portfolio Backend"/' .env
             sed -i 's/^APP_DEVELOPER_NAME=.*/APP_DEVELOPER_NAME="Brian Ssekalegga"/' .env
             sed -i 's/^PORTFOLIO_OWNER_NAME=.*/PORTFOLIO_OWNER_NAME="Brian Ssekalegga"/' .env
+            sed -i 's/^PORTFOLIO_OWNER_NAME_INITIALS=.*/PORTFOLIO_OWNER_NAME_INITIALS="BS"/' .env
+            sed -i 's/^PORTFOLIO_OWNER_TITLE=.*/PORTFOLIO_OWNER_TITLE="Full Stack Developer"/' .env
 
             # Build and restart with prod compose
             docker compose -f compose.prod.yaml down
