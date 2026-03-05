@@ -35,12 +35,13 @@ jobs:
             sed -i 's/^PORTFOLIO_OWNER_NAME=.*/PORTFOLIO_OWNER_NAME="Brian Ssekalegga"/' .env
 
             # Build and restart with prod compose
-            docker compose -f compose.prod.yaml down -v
+            docker compose -f compose.prod.yaml down
             docker compose -f compose.prod.yaml build --no-cache
             docker compose -f compose.prod.yaml up -d
 
             # laravel post-deploy commands
             docker compose -f compose.prod.yaml exec -T app php artisan migrate --force
+            docker compose -f compose.prod.yaml exec -T app php artisan db:seed --force
             docker compose -f compose.prod.yaml exec -T app php artisan storage:link
             docker compose -f compose.prod.yaml exec -T app php artisan config:cache
             docker compose -f compose.prod.yaml exec -T app php artisan route:cache
