@@ -25,6 +25,7 @@ A Laravel 12 + Livewire (Volt) starter-based personal portfolio site using Larav
 
 ## Requirements
 
+- Docker
 - PHP ^8.2
 - Composer
 - Node.js + npm
