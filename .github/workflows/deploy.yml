@@ -36,6 +36,9 @@ jobs:
             sed -i 's/^PORTFOLIO_OWNER_NAME_INITIALS=.*/PORTFOLIO_OWNER_NAME_INITIALS="BS"/' .env
             sed -i 's/^PORTFOLIO_OWNER_TITLE=.*/PORTFOLIO_OWNER_TITLE="Full Stack Developer"/' .env
 
+            docker compose -f compose.prod.yaml exec -T app php artisan view:clear
+
+            
             # Build and restart with prod compose
             docker compose -f compose.prod.yaml down
             docker compose -f compose.prod.yaml build --no-cache
