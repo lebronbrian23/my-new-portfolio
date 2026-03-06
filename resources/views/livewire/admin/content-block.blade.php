@@ -138,6 +138,29 @@
                     @enderror
                 </div>
 
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="navigation_link_id">
+                        Associated Navigation Link
+                    </label>
+                    <select
+                        wire:model="navigation_link_id"
+                        id="navigation_link_id"
+                        class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Select a navigation link</option>
+                        @foreach ( \App\Models\NavigationLink::select('id','link_name',)
+                                ->whereNotIn('link_name',['Content Blocks', 'Navigation Links'])
+                                ->where('link_status', 'active')
+                                ->orderBy('link_position','asc')
+                                ->get(); as $link )
+                            <option value="{{ $link->id }}">{{ ucfirst($link->link_name) }}</option>
+                        @endforeach
+                    </select>
+                    @error('navigation_link_id')
+                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
                 @if( $editing_content_block_id && $current_photo)
                     <div class="mb-4">
                         <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200">
@@ -224,29 +247,6 @@
                         @endforeach
                     </select>
                     @error('content_block_status')
-                        <span class="text-red-600 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="block mb-2 font-medium text-gray-700 dark:text-gray-200" for="navigation_link_id">
-                        Associated Navigation Link
-                    </label>
-                    <select
-                        wire:model="navigation_link_id"
-                        id="navigation_link_id"
-                        class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded focus:ring-2 focus:ring-blue-500"
-                    >
-                        <option value="">Select a navigation link</option>
-                        @foreach ( \App\Models\NavigationLink::select('id','link_name',)
-                                ->whereNotIn('link_name',['Content Blocks', 'Navigation Links'])
-                                ->where('link_status', 'active')
-                                ->orderBy('link_position','asc')
-                                ->get(); as $link )
-                            <option value="{{ $link->id }}">{{ ucfirst($link->link_name) }}</option>
-                        @endforeach
-                    </select>
-                    @error('navigation_link_id')
                         <span class="text-red-600 text-sm">{{ $message }}</span>
                     @enderror
                 </div>

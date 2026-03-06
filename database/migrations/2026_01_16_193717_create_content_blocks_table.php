@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('content_blocks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->integer('years_of_experience')->default(0);
-            $table->integer('projects_completed')->default(0);
+            $table->integer('years_of_experience')->nullable()->default(0);
+            $table->integer('projects_completed')->nullable()->default(0);
             $table->string('photo')->nullable();
             $table->enum('content_block_section',['home','about','work','skill','contact','resume'])->nullable();
             $table->enum('content_block_status',['active','inactive'])->default('active');
