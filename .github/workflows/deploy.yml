@@ -38,6 +38,7 @@ jobs:
 
             # Build and restart with prod compose
             docker compose -f compose.prod.yaml down
+            docker volume rm my-new-portfolio_app_data || true   # only remove app_data
             docker compose -f compose.prod.yaml build --no-cache
             docker compose -f compose.prod.yaml up -d
 
