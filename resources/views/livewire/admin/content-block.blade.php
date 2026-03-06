@@ -91,7 +91,7 @@
         </div>
 
         <div class="rounded-xl border border-neutral-200 dark:border-neutral-700 p-4">
-            <h3 class="text-xl font-semibold mb-4">{{ __('Add / Edit content blocks') }}</h3>
+            <h3 class="text-xl font-semibold mb-4">{{ __('Add / Edit Content Blocks') }}</h3>
 
             <form wire:submit.prevent="save" action="">
 

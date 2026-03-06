@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ env('PORTFOLIO_OWNER_NAME', 'Your Name') }} - {{ env('PORTFOLIO_OWNER_TITLE', 'Software Developer') }}</title>
+    <title>{{ env('PORTFOLIO_OWNER_NAME', 'My Portfolio') }} - {{ env('PORTFOLIO_OWNER_TITLE', 'Software Developer') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
