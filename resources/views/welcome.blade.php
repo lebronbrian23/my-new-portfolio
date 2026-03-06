@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ env('PORTFOLIO_OWNER_NAME', 'My Portfolio') }} - {{ env('PORTFOLIO_OWNER_TITLE', 'Software Developer') }}</title>
+    <title>{{ config('app.owner_name') }} - {{ config('app.owner_title') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -142,8 +142,8 @@
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <a href="#home" class="text-2xl font-display font-bold text-primary hover:text-accent transition-colors">
-                    <span class="flex md:hidden">{{ env('PORTFOLIO_OWNER_NAME_INITIALS') }}</span>
-                    <span class="hidden md:flex">{{ env('PORTFOLIO_OWNER_NAME') }} </span>
+                    <span class="flex md:hidden">{{ config('app.owner_initials') }}</span>
+                    <span class="hidden md:flex">{{ config('app.owner_name') }} </span>
                 </a>
                 <div class="hidden md:flex space-x-8">
                      @livewire('guest-nav-links-section' , ['location' => 'header'])
@@ -199,7 +199,7 @@
             </div>
             <div class="decorative-line my-8"></div>
             <div class="text-center text-cream/60 text-sm">
-                © {{ date('Y') }} All rights reserved | Designed & developed by {{ env('APP_DEVELOPER_NAME') }}
+                © {{ date('Y') }} All rights reserved | Designed & developed by {{ config('app.developer_name') }}
             </div>
         </div>
     </footer>

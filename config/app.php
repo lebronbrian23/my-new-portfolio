@@ -123,4 +123,14 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'backend_name' => env('APP_BACKEND_NAME', 'Portfolio Backend'),
+
+    'developer_name' => env('APP_DEVELOPER_NAME', 'Brian Ssekalegga'),
+
+    'owner_name' => env('PORTFOLIO_OWNER_NAME', 'Brian Ssekalegga'),
+
+    'owner_initials' => env('PORTFOLIO_OWNER_NAME_INITIALS', 'BS'),
+
+    'owner_title' => env('PORTFOLIO_OWNER_TITLE', 'Full Stack Developer'),
+
 ];
