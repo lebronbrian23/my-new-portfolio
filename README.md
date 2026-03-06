@@ -53,7 +53,7 @@ To run the portfolio locally:
 - PHP >= 8.2 with required extensions
 - Composer
 - Node.js & npm
-- A supported database (MySQL, Postgres, SQLite, etc.)
+- A supported database (MySQL, SQLite, etc.)
 - Docker is optional but recommended for local environment parity
 
 ### Useful Commands
