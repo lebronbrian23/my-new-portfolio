@@ -13,10 +13,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            UserTableSeeder::class,
-            NavigationLinkTableSeeder::class,
-            ContentBlockTableSeeder::class
-        ]);
+        if ( \App\Models\User::count() === 0 ) {
+            $this->call(UserTableSeeder::class);
+        }
+
+        if ( \App\Models\NavigationLink::count() === 0 ) {
+            $this->call(NavigationLinkTableSeeder::class);
+        }
+
+        if ( \App\Models\ContentBlock::count() === 0 ) {
+            $this->call(ContentBlockTableSeeder::class);
+        }
+
     }
 }

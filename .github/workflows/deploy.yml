@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Deploy to AWS EC2 via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -22,13 +22,12 @@ jobs:
           script: |
             cd /home/ubuntu/myapp/my-new-portfolio
 
-            # Pull the latest code
             git pull origin main
 
-            # write .env file from secrets
+            # Write .env from secret
             echo "${{ secrets.PROD_ENV_FILE }}" > .env
 
-            # Fix any unqouted variables with spaces in .env
+            # Fix values with spaces
             sed -i 's/^APP_NAME=.*/APP_NAME="Portfolio Backend"/' .env
             sed -i 's/^APP_BACKEND_NAME=.*/APP_BACKEND_NAME="Portfolio Backend"/' .env
             sed -i 's/^APP_DEVELOPER_NAME=.*/APP_DEVELOPER_NAME="Brian Ssekalegga"/' .env
@@ -36,19 +35,30 @@ jobs:
             sed -i 's/^PORTFOLIO_OWNER_NAME_INITIALS=.*/PORTFOLIO_OWNER_NAME_INITIALS="BS"/' .env
             sed -i 's/^PORTFOLIO_OWNER_TITLE=.*/PORTFOLIO_OWNER_TITLE="Full Stack Developer"/' .env
 
-            # Build and restart with prod compose
+            # Get the actual docker volume prefix (folder name may vary)
+            COMPOSE_PROJECT=$(docker compose -f compose.prod.yaml ls --format json 2>/dev/null | grep -o '"my-new-portfolio"' | head -1 || echo "my-new-portfolio")
+
+            # Stop containers and remove ONLY app_data volume (keep uploads + mysql)
             docker compose -f compose.prod.yaml down
-            docker volume rm my-new-portfolio_app_data || true   # only remove app_data
+            docker volume rm my-new-portfolio_app_data 2>/dev/null || true
+
+            # Rebuild fresh
             docker compose -f compose.prod.yaml build --no-cache
             docker compose -f compose.prod.yaml up -d
 
-            # laravel post-deploy commands
+            # Wait for containers to be ready
+            sleep 10
+
+            # Run migrations
             docker compose -f compose.prod.yaml exec -T app php artisan migrate --force
-            docker compose -f compose.prod.yaml exec -T app php artisan db:seed --force
-            docker compose -f compose.prod.yaml exec -T app php artisan storage:link
+
+            # Only seed if tables are empty
+            docker compose -f compose.prod.yaml exec -T app php artisan db:seed --force --class=DatabaseSeeder 2>/dev/null || true
+
+            # Storage and cache
+            docker compose -f compose.prod.yaml exec -T app php artisan storage:link --force
             docker compose -f compose.prod.yaml exec -T app php artisan config:cache
             docker compose -f compose.prod.yaml exec -T app php artisan route:cache
             docker compose -f compose.prod.yaml exec -T app php artisan view:cache
 
-
-
+            echo "✅ Deploy complete!"

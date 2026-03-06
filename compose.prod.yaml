@@ -33,8 +33,7 @@ services:
     networks:
       - app_network
     depends_on:
-      app:
-        condition: service_started
+      - app
 
   mysql:
     image: 'mysql:8.4'
@@ -79,4 +78,3 @@ volumes:
     driver: local
   app_data:
     driver: local
-
