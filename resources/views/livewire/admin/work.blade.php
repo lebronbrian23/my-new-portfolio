@@ -47,7 +47,7 @@
                             <td class="border border-gray-300 px-2 py-1">{{ $work->description }}</td>
                             <td class="border border-gray-300 px-2 py-1">
                                 @foreach ( $work->skills as $skill )
-                                    <span class="inline-block px-2 py-1 rounded-full mr-1 mb-1 space-x-1">{{ $skill->name }}<span>
+                                    <span class="px-2 py-1 rounded-full mr-1 mb-1 space-x-1">{{ $skill->name }}<span>
                                 @endforeach
                             </td>
                             <td class="border border-gray-300 px-2 py-1">{{ $work->url }}</td>
