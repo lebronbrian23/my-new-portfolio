@@ -15,7 +15,7 @@ class GuestSkillSection extends Component
 
     public function render()
     {
-        $skill_content = SkillModel::paginate(10);
+        $skill_content = SkillModel::all();
 
         return view('livewire.guest.guest-skill-section', [
             'page_title' => 'Skills & Tools',
